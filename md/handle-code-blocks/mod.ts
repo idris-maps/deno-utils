@@ -1,12 +1,12 @@
-interface Part {
+export interface Part {
   type: "md" | "code";
   lang?: string;
   content: string;
 }
 
-type Gen<T> = AsyncGenerator<T, void, unknown>;
+export type Gen<T> = AsyncGenerator<T, void, unknown>;
 
-const toLines = async function* (md: string): Gen<string> {
+export const toLines = async function* (md: string): Gen<string> {
   const lines = md.split("\n");
   let i = 0;
   const length = lines.length;
@@ -18,7 +18,7 @@ const toLines = async function* (md: string): Gen<string> {
 
 const FENCE = "```";
 
-const separateCode = async function* (iterator: Gen<string>): Gen<Part> {
+export const separateCode = async function* (iterator: Gen<string>): Gen<Part> {
   let isCode = false;
   let lang: string | undefined = undefined;
   let current: string | undefined = undefined;
@@ -44,7 +44,7 @@ const separateCode = async function* (iterator: Gen<string>): Gen<Part> {
   yield { type: "md", content: current || "" };
 };
 
-const trim = async function* (iterator: Gen<Part>): Gen<Part> {
+export const trim = async function* (iterator: Gen<Part>): Gen<Part> {
   for await (const part of iterator) {
     part.content = part.content.trim();
     if (part.content !== "") {
