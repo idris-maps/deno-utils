@@ -56766,7 +56766,9 @@ for (
         ? a = self.location.href
         : "undefined" != typeof document && document.currentScript &&
           (a = document.currentScript.src),
-        a = 0 !== a.indexOf("blob:") ? a.substr(0, a.lastIndexOf("/") + 1) : "",
+        a = 0 !== a.indexOf("blob:")
+          ? a.substr(0, a.lastIndexOf("/") + 1)
+          : "",
         s = function (e) {
           var n = new XMLHttpRequest();
           return n.open("GET", e, !1), n.send(null), n.responseText;

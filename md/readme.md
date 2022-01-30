@@ -5,7 +5,7 @@
 Convert markdown to HTML
 
 ```ts
-type toHtml = (source: string | ArrayLike<number>) => Promise<string>
+type toHtml = (source: string | ArrayLike<number>) => Promise<string>;
 ```
 
 Based on [markdown-wasm](https://github.com/rsms/markdown-wasm) by
@@ -19,3 +19,15 @@ following `parseOptions`:
 }
 ```
 
+## handle-code-blocks
+
+Parse code blocks separately
+
+```ts
+type HandleCodeBlocks(
+  md2html: (md: string) => Promise<string>,
+  handleCodeBlock: (content: string, lang?: string) => Promise<string>,
+) =>
+  (md: string) =>
+    Promise<string>
+```
