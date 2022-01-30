@@ -1,7 +1,7 @@
 import * as md from "./markdown.es.embed.js";
-import type { ParseOptions, Source } from "./markdown.d.ts";
+import type { ParseOptions } from "./markdown.d.ts";
 
-export default async (source: Source): Promise<string> => {
+export default async (source: string | ArrayLike<number>): Promise<string> => {
   const parseOptions: ParseOptions = {
     bytes: false,
     parseFlags: md.ParseFlags.DEFAULT | md.ParseFlags.NO_HTML |
