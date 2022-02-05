@@ -27,7 +27,5 @@ Parse code blocks separately
 type HandleCodeBlocks = (
   md2html: (md: string) => Promise<string>,
   handleCodeBlock: (content: string, lang?: string) => Promise<string>,
-) =>
-  (md: string) =>
-    Promise<string>
+) => (md: string) => Promise<string>;
 ```
