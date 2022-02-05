@@ -14,6 +14,10 @@ Write HTML strings
 
 Create and verify JWT
 
+## `md`
+
+Convert markdown to HTML
+
 ## `server`
 
 A simple HTTP server
