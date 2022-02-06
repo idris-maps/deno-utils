@@ -1,10 +1,10 @@
 /**
  * Copied from https://deno.land/std@0.117.0/http/file_server.ts
  * passes file and fileInfo to serveFile in order to return 404
- * rather than 500 
+ * rather than 500
  */
 
-import { extname, Status, STATUS_TEXT } from './deps.ts'
+import { extname, Status, STATUS_TEXT } from "./deps.ts";
 
 const DEFAULT_CHUNK_SIZE = 16_640;
 
@@ -173,7 +173,6 @@ export async function serveFile(
   file: Deno.File,
   fileInfo: Deno.FileInfo,
 ): Promise<Response> {
-
   const headers = setBaseHeaders();
 
   // Set mime-type using the file extension in filePath

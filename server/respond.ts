@@ -1,4 +1,4 @@
-import { serveFile } from './serve-file.ts'
+import { serveFile } from "./serve-file.ts";
 import type { El } from "./jsx.ts";
 import { renderString } from "./jsx.ts";
 
@@ -119,11 +119,11 @@ const file = (req: Request): FileResponse =>
         Deno.open(filePath),
         Deno.stat(filePath),
       ]);
-      return serveFile(req, filePath, file, fileInfo)
+      return serveFile(req, filePath, file, fileInfo);
     } catch (err) {
-      return status(404)
+      return status(404);
     }
-  }
+  };
 
 export interface Res {
   file: FileResponse;
