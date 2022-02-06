@@ -1,3 +1,4 @@
+import { serveFile } from './serve-file.ts'
 import type { El } from "./jsx.ts";
 import { renderString } from "./jsx.ts";
 
@@ -109,7 +110,23 @@ const redirect: RedirectResponse = (url, options) =>
     },
   );
 
+type FileResponse = (filePath: string) => Promise<Response>;
+
+const file = (req: Request): FileResponse =>
+  async (filePath: string) => {
+    try {
+      const [file, fileInfo] = await Promise.all([
+        Deno.open(filePath),
+        Deno.stat(filePath),
+      ]);
+      return serveFile(req, filePath, file, fileInfo)
+    } catch (err) {
+      return status(404)
+    }
+  }
+
 export interface Res {
+  file: FileResponse;
   html: HTMLResponse;
   json: JSONResponse;
   jsx: JSXResponse;
@@ -117,12 +134,13 @@ export interface Res {
   status: StatusResponse;
 }
 
-const res: Res = {
+const init = (req: Request): Res => ({
+  file: file(req),
   html,
   json,
   jsx,
   redirect,
   status,
-};
+});
 
-export default res;
+export default init;

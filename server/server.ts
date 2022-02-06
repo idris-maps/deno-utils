@@ -1,6 +1,6 @@
 import { serve, ServeHandler } from "./deps.ts";
 import parseRequest from "./parse-request.ts";
-import res from "./respond.ts";
+import initRes from "./respond.ts";
 import initRouter from "./match-route.ts";
 import type { Config, Router } from "./types.d.ts";
 
@@ -10,6 +10,7 @@ const requestHandler = <T>(
   onError?: (e: unknown) => void,
 ): ServeHandler =>
   async (request: Request): Promise<Response> => {
+    const res = initRes(request)
     try {
       const req = await parseRequest(request);
       const route = router(req.method, req.url.pathname);
