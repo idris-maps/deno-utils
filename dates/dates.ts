@@ -41,14 +41,14 @@ export const getWeek = (date: Date) => {
   return Array.from(Array(7)).map((_, i) => addDays(monday, i));
 };
 
-const getYYYYMMDD = (date: Date) => date.toISOString().split("T")[0];
+export const getYYYYMMDD = (date: Date) => date.toISOString().split("T")[0];
 
 const getFirstDayOfMonth = (date: Date) => {
-  const [yyyy, mm] = getYYYYMMDD(date);
+  const [yyyy, mm] = getYYYYMMDD(date).split("-");
   return new Date(`${yyyy}-${mm}-01`);
 };
 
-const getWeeksOfMonth = (date: Date) => {
+export const getWeeksOfMonth = (date: Date) => {
   const firstDay = getFirstDayOfMonth(date);
   const firstDayOfFirstWeek = getPrevMonday(firstDay);
   return Array.from(Array(6))
@@ -96,7 +96,7 @@ const formatMonth = (month: Date[][], date: Date): DayInMonth[][] =>
       ),
   );
 
-const getMonth = (date: Date): WeeksInMonth => {
+export const getMonth = (date: Date): WeeksInMonth => {
   if (!isValid(date)) throw "invalid date";
   const month = getWeeksOfMonth(date);
   return {
@@ -106,22 +106,6 @@ const getMonth = (date: Date): WeeksInMonth => {
     next: () => getMonth(getSomeDayOfNextMonth(date)),
     prev: () => getMonth(getFirstDayOfPreviousMonth(date)),
   };
-};
-
-const getWeeksOfYear = (date: Date): Date[][] => {
-  const first = getFirstDayOfYear(date);
-  const last = getNextSunday(getLastDayOfYear(date));
-  let day = getPrevMonday(first);
-  let weeks = [], week = [];
-  while (day <= last) {
-    week.push(day);
-    if (isSunday(day)) {
-      weeks.push(week);
-      week = [];
-    }
-    day = subtractDays(day, 1);
-  }
-  return weeks;
 };
 
 export const getUnixTimestamp = (date: Date) =>
