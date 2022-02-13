@@ -27,5 +27,5 @@ const createIfNotExist = async (
 export default async (pathParts: string[], dir?: string) =>
   createIfNotExist(
     dir ? `./${dir}` : ".",
-    ["routes", ...pathParts],
+    pathParts,
   );

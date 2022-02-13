@@ -57,8 +57,6 @@ const getPort = () => {
 };
 
 server<Local>({ port: getPort(), routes, local });
-
-console.log(\`Listening on port: \${getPort()}\`);
   `,
 
   // ---------------

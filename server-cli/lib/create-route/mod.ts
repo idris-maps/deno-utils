@@ -35,19 +35,24 @@ export default async (
   const file = getFileContent(_method, pathParts, tsx);
 
   if (!(await hasRoutesDir(dir))) {
-    throw 'no "routes" directory in the current location';
+    throw 'no "routes" directory';
   }
 
-  await createDirs(pathParts, dir);
+  const filePathParts = [
+    "routes",
+    ...pathParts.map((d) => d.startsWith(":") ? `[${d.substring(1)}]` : d),
+  ];
+
+  await createDirs(filePathParts, dir);
 
   const filePath = [
-    ...(dir ? [dir, "routes", ...pathParts] : ["routes", ...pathParts]),
+    ...(dir ? [dir, ...filePathParts] : filePathParts),
     _method + (tsx ? ".tsx" : ".ts"),
   ].join("/");
 
   if (await fileExists(filePath)) {
     throw `file "${filePath}" already exists`;
   }
-
-  return Deno.writeTextFile(filePath, file);
+  console.log(filePath);
+  return Deno.writeTextFile(filePath, file, { create: true });
 };

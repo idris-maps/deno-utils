@@ -35,6 +35,12 @@ const getEndpointPath = ([_, ...rest]: string[]) =>
     .map((d) => d.startsWith("[") && d.endsWith("]") ? ":" + d.slice(1, -1) : d)
     .join("/");
 
+const getFileName = (parts: string[], method: string) =>
+  [...parts, method]
+    .map((d) => d.startsWith("[") && d.endsWith("]") ? d.slice(1, -1) : d).join(
+      "_",
+    );
+
 const parseFilePath = (filePath: string) => {
   const path = getPathFromRoutes(filePath);
   const parts = path.split("/");
@@ -45,7 +51,7 @@ const parseFilePath = (filePath: string) => {
   if (isAllowedExt(ext) && isAllowedMethod(method)) {
     const route: RouteToCreate = {
       file: {
-        name: [...parts, method].join("_"),
+        name: getFileName(parts, method),
         path,
       },
       path: getEndpointPath(parts),
