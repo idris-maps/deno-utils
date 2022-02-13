@@ -15,7 +15,7 @@ deno install --allow-net --allow-read -n server-cli https://deno.land/x/anders/@
 
 `server-cli init <DIR>`
 
-DIR is optional if not defined the server will be created in the current directory
+DIR is optional, if not defined the server will be created in the current directory
 
 ### generate a route
 
