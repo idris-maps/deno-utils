@@ -2,6 +2,10 @@
 
 My collection of deno utilities
 
+## `dates`
+
+Utilities for date manipulation
+
 ## `diacritics`
 
 Remove [diacritics](https://en.wikipedia.org/wiki/Diacritic) from strings
@@ -21,3 +25,7 @@ Convert markdown to HTML
 ## `server`
 
 A simple HTTP server
+
+## `server-cli`
+
+Initialize a server and generate routes
