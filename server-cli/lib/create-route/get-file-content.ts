@@ -34,7 +34,7 @@ export default (method: string, pathParts: string[], jsx?: boolean) => {
   if (jsx) {
     return [
       importJsx(pathToMain),
-      handlerJsx,
+      handlerJsx(method),
       exportDefault(method),
     ].join("\n\n");
   }
