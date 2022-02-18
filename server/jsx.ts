@@ -14,12 +14,12 @@ export const h = (tag: any, props: any, ...args: any): El => {
   return { tag, props, children };
 };
 
-const isUndefined = (d: any): d is undefined => typeof d === 'undefined'
+const isUndefined = (d: any): d is undefined => typeof d === "undefined";
 const isString = (d: El | string): d is string => String(d) === d;
 const stringifyProps = (props?: { [key: string]: any }): string =>
   props
     ? " " + Object.keys(props)
-      .filter(key => !isUndefined(props[key]))
+      .filter((key) => !isUndefined(props[key]))
       .map((key) => `${key}="${String(props[key])}"`)
       .join(" ")
     : "";
