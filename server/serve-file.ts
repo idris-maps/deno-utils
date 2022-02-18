@@ -1,5 +1,5 @@
 /**
- * Copied from https://deno.land/std@0.117.0/http/file_server.ts
+ * Copied from https://deno.land/std@0.126.0/http/file_server.ts
  * passes file and fileInfo to serveFile in order to return 404
  * rather than 500
  */
