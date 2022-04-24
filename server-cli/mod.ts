@@ -3,7 +3,7 @@ import createRoute from "./lib/create-route/mod.ts";
 import generateRoutesFile from "./lib/generate-routes-file/mod.ts";
 import * as msg from "./lib/msg.ts";
 
-const UTILS_VERSION = "v0.0.7";
+const UTILS_VERSION = "v0.0.8";
 
 const [op, ...args] = Deno.args;
 
