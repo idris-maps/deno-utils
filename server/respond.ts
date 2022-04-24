@@ -108,11 +108,17 @@ const html = (log: LogResponse, cookie?: Cookie): HTMLResponse =>
 
 type JSXResponse = (
   jsx: El | string | null,
-  options?: ResponseOptions,
+  options?: ResponseOptions & { doctype?: 'none' | string },
 ) => Response;
 
 const jsx = (log: LogResponse, cookie?: Cookie): JSXResponse =>
-  (jsx, options) => html(log, cookie)(renderString(jsx), options);
+  (jsx, _options) => {
+    const { doctype, ...options } = (_options || {})
+    const _html = doctype === 'none'
+      ? renderString(jsx)
+      : [(doctype || '<!DOCTYPE html>'), renderString(jsx)].join('\n')
+    return html(log, cookie)(_html, options);
+  }
 
 type RedirectResponse = (
   url: string,
