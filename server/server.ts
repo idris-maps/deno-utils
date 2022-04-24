@@ -58,7 +58,7 @@ const init = <Local, CookieContent = any>(
   const handleRequest = requestHandler(router, local, cookie, log);
 
   console.log(`Started on port ${port}`);
-  serve(handleRequest, { addr: `:${port}` });
+  serve(handleRequest, { port });
 };
 
 export default init;
