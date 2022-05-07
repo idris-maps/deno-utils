@@ -16,7 +16,7 @@ const defaultConfig: Config = {
 };
 
 export default async (d: ChartData) => {
-  const { isInvalid, sanitizeData } = checkLabelValue();
+  const { isInvalid, sanitizeData } = checkLabelValue;
 
   if (isInvalid(d)) {
     throw new Error("Invalid data");

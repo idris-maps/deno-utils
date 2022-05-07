@@ -1,22 +1,52 @@
 import type { ChartData } from "./parse.ts";
 
-export const checkLabelValue = () => {
-  const isValidRow = ([label, value]: string[], d: any) =>
-    String(d[label]) === d[label] &&
-    !Number.isNaN(Number(d[value]));
+const isString = (d: any) => String(d) === d
+const isNum = (d: any) => !Number.isNaN(Number(d))
+const isDateString = (d: string) => isString(d) && !Number.isNaN(new Date(d).getDate())
 
-  const isInvalid = ({ columns, data }: ChartData) =>
-    columns.length < 2 ||
-    !data.length ||
-    data.some((d) => !isValidRow(columns, d));
+const validate = (validators: Array<(d: any) => boolean>) => {
+  const isValidRow = (columns: string[], d: any) =>
+    columns.every((col, i) => {
+      const isValid = validators[i] || validators[1]
+      return isValid(d[col])
+    })
 
-  const sanitizeData = ({ columns, data }: ChartData) => {
-    const [label, value] = columns;
-    return data.map((d) => ({
-      [label]: String(d[label]),
-      [value]: Number(d[value]),
-    }));
-  };
+  return ({ columns, data }: ChartData) =>
+    columns.length < validators.length
+    || !data.length
+    || data.some(row => !isValidRow(columns, row))
+}
 
-  return { isInvalid, sanitizeData };
-};
+const sanitize = (to: (StringConstructor | NumberConstructor)[]) =>
+  ({ columns, data }: ChartData) =>
+      data.map(row => 
+        columns.reduce((r, column, i) => {
+          const cast = to[i] || to[1]
+          return { ...r, [column]: cast(row[column]) }
+        }, {})
+      )
+
+export const checkLabelValue = {
+  isInvalid: validate([isString, isNum]),
+  sanitizeData: sanitize([String, Number]),
+}
+
+export const checkDateValue = {
+  isInvalid: validate([isDateString, isNum]),
+  sanitizeData: sanitize([String, Number]),
+}
+
+export const checkXValueLabel = {
+  isInvalid: validate([isString, isNum, isString]),
+  sanitizeData: sanitize([String, Number, String]),
+}
+
+export const checkDateValueLabel = {
+  isInvalid: validate([isDateString, isNum, isString]),
+  sanitizeData: sanitize([String, Number, String]),
+}
+
+export const checkLabelValues = {
+  isInvalid: validate([isString, isNum]),
+  sanitizeData: sanitize([String, Number])
+}
