@@ -1,4 +1,4 @@
-import line from './line.ts'
+import line from "./line.ts";
 import type { ChartData } from "./parse.ts";
 
-export default (d: ChartData) => line(d, true)
+export default (d: ChartData) => line(d, true);

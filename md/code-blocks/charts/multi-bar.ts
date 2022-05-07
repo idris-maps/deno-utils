@@ -3,26 +3,26 @@ import { renderVegalite } from "./vega.ts";
 import { checkLabelValues } from "./validate-sanitize.ts";
 
 interface Config {
-  width: number
-  height: number
-  yLabel?: string
-  [key: string]: any
+  width: number;
+  height: number;
+  yLabel?: string;
+  [key: string]: any;
 }
 
 const defaultConfig: Config = {
   width: 400,
   height: 200,
-}
+};
 
 export default async (d: ChartData, area: boolean = false) => {
-  const { isInvalid, sanitizeData } = checkLabelValues
+  const { isInvalid, sanitizeData } = checkLabelValues;
 
   if (isInvalid(d)) {
-    throw new Error('Invalid data')
+    throw new Error("Invalid data");
   }
 
-  const config = { ...defaultConfig, ...d.meta }
-  const [x, ...rest] = d.columns
+  const config = { ...defaultConfig, ...d.meta };
+  const [x, ...rest] = d.columns;
 
   const spec = {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -31,27 +31,27 @@ export default async (d: ChartData, area: boolean = false) => {
     "data": {
       "values": sanitizeData(d),
     },
-    "repeat": {"layer": rest},
+    "repeat": { "layer": rest },
     "spec": {
       "mark": "bar",
       "encoding": {
         "x": {
           "field": x,
-          "type": "nominal"
+          "type": "nominal",
         },
         "y": {
-          "field": {"repeat": "layer"},
+          "field": { "repeat": "layer" },
           "type": "quantitative",
           "title": config.yLabel,
         },
-        "color": {"datum": {"repeat": "layer"}},
-        "xOffset": {"datum": {"repeat": "layer"}}
-      }
+        "color": { "datum": { "repeat": "layer" } },
+        "xOffset": { "datum": { "repeat": "layer" } },
+      },
     },
     "config": {
-      "mark": {"invalid": null}
-    }
-  }
+      "mark": { "invalid": null },
+    },
+  };
 
-  return renderVegalite(spec)
-}
+  return renderVegalite(spec);
+};
