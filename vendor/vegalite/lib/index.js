@@ -1,3 +1,6 @@
+// deno-lint-ignore-file
+// deno-fmt-ignore-file
+
 import { View, parse } from 'vega'
 import { compile } from 'vega-lite'
 
