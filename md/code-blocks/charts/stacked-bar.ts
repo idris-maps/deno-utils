@@ -1,5 +1,5 @@
 import type { ChartData } from "./parse.ts";
-import { renderVegalite } from "./vega.ts";
+import { vegaliteToSvg } from "./deps.ts";
 import { checkXValueLabel } from "./validate-sanitize.ts";
 
 interface Config {
@@ -38,5 +38,5 @@ export default async (d: ChartData, area: boolean = false) => {
     },
   };
 
-  return await renderVegalite(spec);
+  return await vegaliteToSvg(spec);
 };

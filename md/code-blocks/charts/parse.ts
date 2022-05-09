@@ -47,7 +47,7 @@ const getColumns = (d: string, separator: string = ",") => {
 };
 
 export const parseData = async (content: string): Promise<ChartData> => {
-  const parts = content.split("---").map((d) => d.trim());
+  const parts = content.split(META_SEPARATOR).map((d) => d.trim());
   if (parts.length === 1) {
     return {
       columns: getColumns(parts[0]),
