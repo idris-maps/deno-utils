@@ -53,6 +53,8 @@ export const trim = async function* (iterator: Gen<Part>): Gen<Part> {
   }
 };
 
+const uniq = <T>(arr: T[]): T[] => Array.from(new Set(arr));
+
 export default (
   md2html: (md: string) => Promise<string>,
   handleCodeBlock: (content: string, lang?: string) => Promise<string>,
@@ -62,11 +64,15 @@ export default (
     const parts = trim(separateCode(lines));
 
     let result: string = "";
+    let langs: string[] = [];
 
     for await (const part of parts) {
       try {
         if (part.type === "code") {
           result = result + await handleCodeBlock(part.content, part.lang);
+          if (part.lang) {
+            langs.push(part.lang);
+          }
         } else {
           result = result + await md2html(part.content);
         }
@@ -75,5 +81,5 @@ export default (
       }
     }
 
-    return result;
+    return { html: result, langs: uniq(langs) };
   };

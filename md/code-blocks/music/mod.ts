@@ -1,5 +1,5 @@
 import { abc } from "./deps.ts";
-import type { CodeBlockHandlers } from "../types.ts";
+import type { CodeBlockHandlers } from "./deps.ts";
 
 const handlers: CodeBlockHandlers = {
   "music-abc": abc,
