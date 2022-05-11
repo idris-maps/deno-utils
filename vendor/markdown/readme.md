@@ -2,6 +2,8 @@
 
 https://github.com/rsms/markdown-wasm
 
+License: [MIT](https://github.com/rsms/markdown-wasm/blob/master/LICENSE)
+
 ## How to build
 
 ```

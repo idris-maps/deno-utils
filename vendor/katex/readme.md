@@ -2,8 +2,9 @@
 
 https://katex.org
 
-must be used with `katex.css` fonst are
-[here](https://github.com/KaTeX/KaTeX/tree/main/fonts)
+must be used with `katex.css`
+
+License: [MIT](https://github.com/KaTeX/KaTeX/blob/main/LICENSE)
 
 ## How to build
 
