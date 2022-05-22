@@ -1,4 +1,4 @@
-import type { ChartData } from "./parse.ts";
+import type { DsvData } from "../deps.ts";
 
 const isString = (d: any) => String(d) === d;
 const isNum = (d: any) => !Number.isNaN(Number(d));
@@ -12,14 +12,14 @@ const validate = (validators: Array<(d: any) => boolean>) => {
       return isValid(d[col]);
     });
 
-  return ({ columns, data }: ChartData) =>
+  return ({ columns, data }: DsvData) =>
     columns.length < validators.length ||
     !data.length ||
     data.some((row) => !isValidRow(columns, row));
 };
 
 const sanitize = (to: (StringConstructor | NumberConstructor)[]) =>
-  ({ columns, data }: ChartData) =>
+  ({ columns, data }: DsvData) =>
     data.map((row) =>
       columns.reduce((r, column, i) => {
         const cast = to[i] || to[1];

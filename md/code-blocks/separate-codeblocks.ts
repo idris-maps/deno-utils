@@ -6,7 +6,15 @@ export interface Part {
 
 export type Gen<T> = AsyncGenerator<T, void, unknown>;
 
-export const toLines = async function* (md: string): Gen<string> {
+const iteratorToGenerator = async function* <T>(
+  iterator: AsyncIterableIterator<T>,
+): Gen<T> {
+  for await (const d of iterator) {
+    yield d;
+  }
+};
+
+const stringToGenerator = async function* (md: string): Gen<string> {
   const lines = md.split("\n");
   let i = 0;
   const length = lines.length;
@@ -18,7 +26,7 @@ export const toLines = async function* (md: string): Gen<string> {
 
 const FENCE = "```";
 
-export const separateCode = async function* (iterator: Gen<string>): Gen<Part> {
+const separateCode = async function* (iterator: Gen<string>): Gen<Part> {
   let isCode = false;
   let lang: string | undefined = undefined;
   let current: string | undefined = undefined;
@@ -44,7 +52,7 @@ export const separateCode = async function* (iterator: Gen<string>): Gen<Part> {
   yield { type: "md", content: current || "" };
 };
 
-export const trim = async function* (iterator: Gen<Part>): Gen<Part> {
+const trim = async function* (iterator: Gen<Part>): Gen<Part> {
   for await (const part of iterator) {
     part.content = part.content.trim();
     if (part.content !== "") {
@@ -55,31 +63,52 @@ export const trim = async function* (iterator: Gen<Part>): Gen<Part> {
 
 const uniq = <T>(arr: T[]): T[] => Array.from(new Set(arr));
 
-export default (
+const parse = async (
   md2html: (md: string) => Promise<string>,
   handleCodeBlock: (content: string, lang?: string) => Promise<string>,
-) =>
-  async (md: string) => {
-    const lines = toLines(md);
-    const parts = trim(separateCode(lines));
+  lines: Gen<string>,
+) => {
+  const parts = trim(separateCode(lines));
 
-    let result: string = "";
-    let langs: string[] = [];
+  let result: string = "";
+  let langs: string[] = [];
 
-    for await (const part of parts) {
-      try {
-        if (part.type === "code") {
-          result = result + await handleCodeBlock(part.content, part.lang);
-          if (part.lang) {
-            langs.push(part.lang);
-          }
-        } else {
-          result = result + await md2html(part.content);
+  for await (const part of parts) {
+    try {
+      if (part.type === "code") {
+        result = result + await handleCodeBlock(part.content, part.lang);
+        if (part.lang) {
+          langs.push(part.lang);
         }
-      } catch (err) {
-        throw new Error(`Could not parse md part: \n${part.content}`, err);
+      } else {
+        result = result + await md2html(part.content);
       }
+    } catch (err) {
+      throw new Error(`Could not parse md part: \n${part.content}`, err);
     }
+  }
 
-    return { html: result, langs: uniq(langs) };
-  };
+  return { html: result, langs: uniq(langs) };
+};
+
+export const fromGenerator = async (
+  md2html: (md: string) => Promise<string>,
+  handleCodeBlock: (content: string, lang?: string) => Promise<string>,
+  lines: AsyncIterableIterator<string>,
+) =>
+  parse(
+    md2html,
+    handleCodeBlock,
+    iteratorToGenerator(lines),
+  );
+
+export const fromString = async (
+  md2html: (md: string) => Promise<string>,
+  handleCodeBlock: (content: string, lang?: string) => Promise<string>,
+  md: string,
+) =>
+  parse(
+    md2html,
+    handleCodeBlock,
+    stringToGenerator(md),
+  );

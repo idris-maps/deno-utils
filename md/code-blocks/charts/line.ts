@@ -1,22 +1,23 @@
-import type { ChartData } from "./parse.ts";
+import type { DsvData } from "./deps.ts";
 import { vegaliteToSvg } from "./deps.ts";
-import { checkDateValue, checkLabelValue } from "./validate-sanitize.ts";
+import { checkDateValue, checkLabelValue, currentColor } from "./utils/mod.ts";
 
 interface Config {
   width: number;
   height: number;
   color: string;
   temporal?: boolean;
+  background?: boolean;
   [key: string]: any;
 }
 
 const defaultConfig: Config = {
   width: 400,
   height: 200,
-  color: "steelblue",
+  color: "currentColor",
 };
 
-export default async (d: ChartData, area: boolean = false) => {
+export default async (d: DsvData, area: boolean = false) => {
   const { isInvalid, sanitizeData } = d.meta.temporal
     ? checkDateValue
     : checkLabelValue;
@@ -26,7 +27,8 @@ export default async (d: ChartData, area: boolean = false) => {
   }
 
   const config = { ...defaultConfig, ...d.meta };
-  const spec = {
+
+  const baseSpec = {
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "width": config.width,
     "height": config.height,
@@ -43,5 +45,8 @@ export default async (d: ChartData, area: boolean = false) => {
       "color": { "value": config.color },
     },
   };
+
+  const spec = config.background ? baseSpec : { ...baseSpec, ...currentColor };
+
   return await vegaliteToSvg(spec);
 };

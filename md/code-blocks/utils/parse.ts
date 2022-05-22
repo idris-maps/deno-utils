@@ -2,7 +2,7 @@ import { parseCsv, parseYaml } from "./deps.ts";
 
 const META_SEPARATOR = "---";
 
-export interface ChartData {
+export interface DsvData {
   columns: string[];
   data: Record<string, string>[];
   meta: Record<string, unknown>;
@@ -24,7 +24,18 @@ const getMeta = (d: string): Record<string, unknown> => {
   }
 };
 
-const getData = async (
+export const separateMeta = (code: string): { meta: Record<string, unknown>, content: string } => {
+  const parts = code.split(META_SEPARATOR).map((d) => d.trim());
+  if (parts.length === 1) {
+    return { meta: {}, content: parts[0] }
+  }
+  return {
+    meta: getMeta(parts[0]),
+    content: parts[1],
+  }
+}
+
+const getDsvData = async (
   d: string,
   separator: string = ",",
 ): Promise<Record<string, string>[]> => {
@@ -46,21 +57,13 @@ const getColumns = (d: string, separator: string = ",") => {
   return firstRow.split(separator).map((d) => d.trim());
 };
 
-export const parseData = async (content: string): Promise<ChartData> => {
-  const parts = content.split(META_SEPARATOR).map((d) => d.trim());
-  if (parts.length === 1) {
-    return {
-      columns: getColumns(parts[0]),
-      meta: {},
-      data: await getData(parts[0]),
-    };
-  }
-  const meta = getMeta(parts[0]);
+export const parseDsv = async (code: string): Promise<DsvData> => {
+  const { meta, content } = separateMeta(code);
   const separator = isString(meta.separator) ? meta.separator : undefined;
 
   return {
-    columns: getColumns(parts[1], separator),
-    data: await getData(parts[1], separator),
     meta,
-  };
-};
+    data: await getDsvData(content, separator),
+    columns: getColumns(content, separator),
+  }
+}

@@ -1,5 +1,5 @@
 import { md2html } from "./deps.ts";
-import separateCodeblocks from "./separate-codeblocks.ts";
+import { fromGenerator, fromString } from "./separate-codeblocks.ts";
 
 export type HandleCodeBlock = (content: string) => Promise<string>;
 
@@ -27,14 +27,18 @@ const handleCodeBlocks = (handlers: CodeBlockHandlers[]) => {
     try {
       const html = await handler(content);
       return `<div class="code ${lang}">${html}</div>`;
-    } catch {
+    } catch (err) {
+      // TODO throw error setting
       return noOp(content, lang);
     }
   };
 };
 
+const isString = (d: string | AsyncIterableIterator<string>): d is string =>
+  typeof d === "string";
+
 export default (handlers: CodeBlockHandlers[]) =>
-  separateCodeblocks(
-    md2html,
-    handleCodeBlocks(handlers),
-  );
+  (input: string | AsyncIterableIterator<string>) =>
+    isString(input)
+      ? fromString(md2html, handleCodeBlocks(handlers), input)
+      : fromGenerator(md2html, handleCodeBlocks(handlers), input);
