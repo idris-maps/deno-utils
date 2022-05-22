@@ -1,0 +1,10 @@
+{
+    "scripts": {
+        "build": "esbuild index.js --format=esm --bundle --minify --outfile=refractor.js"
+    },
+    "dependencies": {
+        "esbuild": "^0.14.39",
+        "hast-util-to-html": "^8.0.3",
+        "refractor": "^3.6.0"
+    }
+}
