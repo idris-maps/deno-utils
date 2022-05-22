@@ -1,6 +1,6 @@
-import * as refractor from './refractor.js'
+import * as refractor from "./refractor.js";
 
 export const highlight = (content: string, lang: string): string =>
-    refractor.highlight(content, lang)
+  refractor.highlight(content, lang);
 
-export const getLangs = (): string[] => refractor.getLangs() 
+export const getLangs = (): string[] => refractor.getLangs();

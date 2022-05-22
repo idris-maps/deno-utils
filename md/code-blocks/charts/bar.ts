@@ -41,7 +41,7 @@ export default async (d: DsvData) => {
     },
   };
 
-  const spec = config.background ? baseSpec : { ...baseSpec, ...currentColor }
+  const spec = config.background ? baseSpec : { ...baseSpec, ...currentColor };
 
   return vegaliteToSvg(spec);
 };

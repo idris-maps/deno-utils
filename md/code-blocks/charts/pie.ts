@@ -1,12 +1,16 @@
 import type { DsvData } from "./deps.ts";
 import { vegaliteToSvg } from "./deps.ts";
-import { checkLabelValue, currentColor, isArrayOfStrings } from "./utils/mod.ts";
+import {
+  checkLabelValue,
+  currentColor,
+  isArrayOfStrings,
+} from "./utils/mod.ts";
 
 interface Config {
   width: number;
   height: number;
   donut?: string | boolean;
-  background?: boolean
+  background?: boolean;
   [key: string]: unknown;
 }
 
@@ -31,7 +35,7 @@ export default async (d: DsvData) => {
     }
     : "arc";
 
-  const colors = isArrayOfStrings(d.meta.colors) ? d.meta.colors : undefined
+  const colors = isArrayOfStrings(d.meta.colors) ? d.meta.colors : undefined;
 
   const baseSpec = {
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
@@ -47,7 +51,7 @@ export default async (d: DsvData) => {
         type: "quantitative",
       },
       color: {
-        field: d.columns[0], 
+        field: d.columns[0],
         type: "nominal",
         scale: colors ? { range: colors } : undefined,
       },
@@ -55,7 +59,7 @@ export default async (d: DsvData) => {
     view: { "stroke": null },
   };
 
-  const spec = config.background ? baseSpec : { ...baseSpec, ...currentColor }
+  const spec = config.background ? baseSpec : { ...baseSpec, ...currentColor };
 
   return vegaliteToSvg(spec);
 };

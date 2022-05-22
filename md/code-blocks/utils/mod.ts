@@ -1,2 +1,2 @@
-export * from './parse.ts'
-export * from './svg-attributes.ts'
+export * from "./parse.ts";
+export * from "./svg-attributes.ts";

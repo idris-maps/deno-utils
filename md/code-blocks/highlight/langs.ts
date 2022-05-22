@@ -1,3 +1,3 @@
-import { getLangs } from './deps.ts'
+import { getLangs } from "./deps.ts";
 
-export default getLangs()
+export default getLangs();

@@ -1,6 +1,11 @@
 import type { DsvData } from "./deps.ts";
 import { vegaliteToSvg } from "./deps.ts";
-import { checkDateValueLabel, checkXValueLabel, currentColor, isArrayOfStrings } from "./utils/mod.ts";
+import {
+  checkDateValueLabel,
+  checkXValueLabel,
+  currentColor,
+  isArrayOfStrings,
+} from "./utils/mod.ts";
 
 interface Config {
   width: number;
@@ -49,12 +54,12 @@ export default async (d: DsvData) => {
       color: {
         field: d.columns[2],
         type: "nominal",
-        scale: colors ? { range: colors } : undefined
+        scale: colors ? { range: colors } : undefined,
       },
     },
   };
 
-  const spec = config.background ? baseSpec : { ...baseSpec, ...currentColor }
+  const spec = config.background ? baseSpec : { ...baseSpec, ...currentColor };
 
   return await vegaliteToSvg(spec);
 };

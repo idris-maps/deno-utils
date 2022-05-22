@@ -24,16 +24,18 @@ const getMeta = (d: string): Record<string, unknown> => {
   }
 };
 
-export const separateMeta = (code: string): { meta: Record<string, unknown>, content: string } => {
+export const separateMeta = (
+  code: string,
+): { meta: Record<string, unknown>; content: string } => {
   const parts = code.split(META_SEPARATOR).map((d) => d.trim());
   if (parts.length === 1) {
-    return { meta: {}, content: parts[0] }
+    return { meta: {}, content: parts[0] };
   }
   return {
     meta: getMeta(parts[0]),
     content: parts[1],
-  }
-}
+  };
+};
 
 const getDsvData = async (
   d: string,
@@ -65,5 +67,5 @@ export const parseDsv = async (code: string): Promise<DsvData> => {
     meta,
     data: await getDsvData(content, separator),
     columns: getColumns(content, separator),
-  }
-}
+  };
+};

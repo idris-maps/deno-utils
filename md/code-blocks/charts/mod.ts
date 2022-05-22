@@ -1,6 +1,6 @@
 import area from "./area.ts";
 import bar from "./bar.ts";
-import line from './line.ts'
+import line from "./line.ts";
 import multiBar from "./multi-bar.ts";
 import multiLine from "./multi-line.ts";
 import pie from "./pie.ts";
@@ -10,11 +10,12 @@ import type { CodeBlockHandlers, DsvData, SvgAttrs } from "./deps.ts";
 
 const wrap = (func: (d: DsvData) => Promise<string>) =>
   async (content: string) => {
-    const data = await parseDsv(content)
+    const data = await parseDsv(content);
     const svg = await func(data);
-    const fix = (attrs: SvgAttrs) => attrs.filter(({ key }) => !['height', 'width'].includes(key))
-    return updateSvgAttributes(svg, fix)
-  }
+    const fix = (attrs: SvgAttrs) =>
+      attrs.filter(({ key }) => !["height", "width"].includes(key));
+    return updateSvgAttributes(svg, fix);
+  };
 
 const handlers: CodeBlockHandlers = {
   "area-chart": wrap(area),
