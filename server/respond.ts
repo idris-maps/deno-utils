@@ -150,6 +150,9 @@ const file = (req: Request, log: LogResponse): FileResponse =>
       log("file", { status: 200, filePath });
       return serveFile(req, filePath, file, fileInfo);
     } catch (err) {
+      if (err.name === "PermissionDenied") {
+        log("file", { type: "error", event: err.name, message: err.message });
+      }
       return status(log)(404);
     }
   };

@@ -53,9 +53,9 @@ server({
         res.redirect("/html", { headers: { "Set-Cookie": "a-cookie" } }),
     },
     {
-      path: "/assets/:file",
+      path: "/assets/*",
       method: "GET",
-      handler: (req, res) => res.file(`assets/${req.params.file}`),
+      handler: (req, res) => res.file(`assets/${req.params["*"]}`),
     },
   ],
 });

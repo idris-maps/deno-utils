@@ -63,6 +63,15 @@ const matchPath = (
 
   if (!subtree) {
     const paramKeys = Object.keys(tree).filter((d) => d.startsWith(":"));
+    const wildCard = Object.keys(tree).find((d) => d === "*");
+
+    if (paramKeys.length === 0 && wildCard) {
+      return matchPath(tree["*"], [], [...path, "*"], {
+        ...params,
+        ":*": [first, ...rest].join("/"),
+      });
+    }
+
     const subtrees = paramKeys.map((k) =>
       matchPath(tree[k], rest, [...path, k], { ...params, [k]: first })
     );
