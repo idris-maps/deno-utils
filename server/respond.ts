@@ -4,7 +4,7 @@ import { renderString } from "./jsx.ts";
 import type { Cookie } from "./deps.ts";
 import { setCookie } from "./deps.ts";
 import { createCookie } from "./cookie.ts";
-import type { Logger } from "./types.d.ts";
+import type { CookieConfig, Logger } from "./types.d.ts";
 
 type LogResponse = (type: string, d: object) => void;
 
@@ -150,6 +150,9 @@ const file = (req: Request, log: LogResponse): FileResponse =>
       log("file", { status: 200, filePath });
       return serveFile(req, filePath, file, fileInfo);
     } catch (err) {
+      if (err.name === "PermissionDenied") {
+        log("file", { type: "error", event: err.name, message: err.message });
+      }
       return status(log)(404);
     }
   };
@@ -166,7 +169,7 @@ export interface Res<T> {
 }
 
 interface Props<T> {
-  cookieConfig?: Omit<Cookie, "value">;
+  cookieConfig?: CookieConfig;
   cookieContent?: T;
   logger?: Logger;
   req: Request;

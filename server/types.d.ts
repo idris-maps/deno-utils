@@ -48,10 +48,12 @@ export interface LogContent extends Record<string, any> {
 
 export type Logger = (d: LogContent) => void;
 
+export type CookieConfig = Omit<Cookie, "value">;
+
 export interface Config<Local, CookieContent = any> {
   port?: number;
   routes: Endpoint<Local, CookieContent>[];
   local: Local;
   log?: Logger;
-  cookie?: Omit<Cookie, "value">;
+  cookie?: CookieConfig;
 }

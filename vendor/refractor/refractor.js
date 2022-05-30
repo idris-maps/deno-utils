@@ -23,9 +23,7 @@ var o = (e, t) => () => (t || e((t = { exports: {} }).exports, t), t.exports),
   bS = (e, t) =>
     mS(
       pS(Pe(
-        e != null
-          ? sS(cS(e))
-          : {},
+        e != null ? sS(cS(e)) : {},
         "default",
         !t && e && e.__esModule
           ? { get: () => e.default, enumerable: !0 }
@@ -622,13 +620,16 @@ var qs = o((gR, $s) => {
   var Gs = /[#.]/g;
   function ry(e, t) {
     for (
-      var r = e || "", a = t || "div", n = {}, i = 0, l, u, d; i < r.length;
+      var r = e || "", a = t || "div", n = {}, i = 0, l, u, d;
+      i < r.length;
     ) {
       Gs.lastIndex = i,
         d = Gs.exec(r),
         l = r.slice(i, d ? d.index : r.length),
         l && (u
-          ? u === "#" ? n.id = l : n.className
+          ? u === "#"
+            ? n.id = l
+            : n.className
             ? n.className.push(l)
             : n.className = [l]
           : a = l,
@@ -658,7 +659,8 @@ var js = o((Tt) => {
   var yt = ",", Vs = " ", _e = "";
   function sy(e) {
     for (
-      var t = [], r = String(e || _e), a = r.indexOf(yt), n = 0, i = !1, l; !i;
+      var t = [], r = String(e || _e), a = r.indexOf(yt), n = 0, i = !1, l;
+      !i;
     ) {
       a === -1 && (a = r.length, i = !0),
         l = r.slice(n, a).trim(),
@@ -1204,14 +1206,12 @@ var Ol = o((NR, ze) => {
                 return f;
               case "Array":
                 return E = n.util.objId(p),
-                  m[E]
-                    ? m[E]
-                    : (f = [],
-                      m[E] = f,
-                      p.forEach(function (_, I) {
-                        f[I] = g(_, m);
-                      }),
-                      f);
+                  m[E] ? m[E] : (f = [],
+                    m[E] = f,
+                    p.forEach(function (_, I) {
+                      f[I] = g(_, m);
+                    }),
+                    f);
               default:
                 return p;
             }
@@ -4770,9 +4770,8 @@ var wc = o((wI, Nc) => {
       function (t) {
         var r =
             /\/(?![/*])|\/\/.*[\r\n]|\/\*[^*]*(?:\*(?!\/)[^*]*)*\*\//.source,
-          a =
-            /@(?!")|"(?:[^\r\n\\"]|\\.)*"|@"(?:[^\\"]|""|\\[\s\S])*"(?!")/
-              .source +
+          a = /@(?!")|"(?:[^\r\n\\"]|\\.)*"|@"(?:[^\\"]|""|\\[\s\S])*"(?!")/
+            .source +
             "|" +
             /'(?:(?:[^\r\n'\\]|\\.|\\[Uux][\da-fA-F]{1,8})'|(?=[^\\](?!')))/
               .source;
@@ -16802,9 +16801,8 @@ var OE = o((uw, kE) => {
           /[-+*\/%~!^]=?|=[=>]?|&[&=]?|\|[|=]?|<<?=?|>>?>?=?|(?:absent|and|not|or|present|xor)\b/,
         punctuation: /::|[;\[\]()\{\},.:]/,
       };
-      var r =
-        /#\{(?:[^"{}]|\{[^{}]*\}|"(?:[^"\\\r\n]|\\(?:\r\n|[\s\S]))*")*\}/
-          .source;
+      var r = /#\{(?:[^"{}]|\{[^{}]*\}|"(?:[^"\\\r\n]|\\(?:\r\n|[\s\S]))*")*\}/
+        .source;
       t.languages.tremor["interpolated-string"] = {
         pattern: RegExp(
           /(^|[^\\])/.source + '(?:"""(?:' +
@@ -20344,13 +20342,9 @@ function YA(e, t, r) {
         i = n + ne(
           r,
           Object.assign({}, e.entities, {
-            subset: (n === "'"
-              ? Fe.single
-              : Fe.double)[
-                e.schema.space === "html"
-                  ? e.valid
-                  : 1
-              ][e.safe],
+            subset: (n === "'" ? Fe.single : Fe.double)[
+              e.schema.space === "html" ? e.valid : 1
+            ][e.safe],
             attribute: !0,
           }),
         ) + n),
