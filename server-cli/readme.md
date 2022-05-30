@@ -5,7 +5,7 @@ Initialize server and generate routes
 ## Install
 
 ```
-deno install --allow-write --allow-read -n server-cli https://deno.land/x/anders@v0.0.11/server-cli/mod.ts
+deno install --allow-write --allow-read -n server-cli https://deno.land/x/anders@v0.0.12/server-cli/mod.ts
 ```
 
 ## Usage
