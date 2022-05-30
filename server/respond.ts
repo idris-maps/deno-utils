@@ -4,7 +4,7 @@ import { renderString } from "./jsx.ts";
 import type { Cookie } from "./deps.ts";
 import { setCookie } from "./deps.ts";
 import { createCookie } from "./cookie.ts";
-import type { Logger } from "./types.d.ts";
+import type { Logger, CookieConfig } from "./types.d.ts";
 
 type LogResponse = (type: string, d: object) => void;
 
@@ -169,7 +169,7 @@ export interface Res<T> {
 }
 
 interface Props<T> {
-  cookieConfig?: Omit<Cookie, "value">;
+  cookieConfig?: CookieConfig;
   cookieContent?: T;
   logger?: Logger;
   req: Request;

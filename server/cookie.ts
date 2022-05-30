@@ -1,9 +1,10 @@
 import { decode, encode } from "./deps.ts";
-import type { Cookie } from "./deps.ts";
+import type { Cookie } from './deps.ts'
+import type { CookieConfig } from "./types.d.ts";
 
 export const parseCookie = <T>(
   cookies: Record<string, string>,
-  config?: Omit<Cookie, "value">,
+  config?: CookieConfig,
 ): T | undefined => {
   if (!config) return undefined;
   const cookie = cookies[config.name];
@@ -17,7 +18,7 @@ export const parseCookie = <T>(
 
 export const createCookie = <T>(
   data: T,
-  config?: Omit<Cookie, "value">,
+  config?: CookieConfig,
 ): Cookie | undefined => {
   if (config) {
     return {

@@ -15,12 +15,33 @@ const db = {
   },
 };
 
-// local is accessible in the route handlers
-const local = { db };
+interface Local {
+  db: {
+    insert: (data: object) => Promise<{
+        _id: string;
+    }>;
+    get: (_id: string) => Promise<{
+        _id: string;
+    } | undefined>;
+  }
+}
 
-server({
+// local is accessible in the route handlers
+const local: Local = { db };
+
+// type definition of cookie content
+interface CookieContent {
+  id: number
+  name: string
+}
+
+server<Local, CookieContent>({
   port: 3000,
   local,
+  cookie: {
+    name: 'my-cookie',
+    secure: true,
+  },
   routes: [
     {
       path: "/html",
@@ -49,8 +70,16 @@ server({
     {
       path: "/redirect",
       method: "GET",
-      handler: (_, res) =>
-        res.redirect("/html", { headers: { "Set-Cookie": "a-cookie" } }),
+      handler: (_, res) => {
+        res.setCookie({ id: 1, name: 'User' })
+        return res.redirect("/redirected")
+      },
+    },
+    {
+      path: "/redirected",
+      method: "GET",
+      handler: (req, res) =>
+        res.json(req.user),
     },
     {
       path: "/assets/*",
