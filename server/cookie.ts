@@ -1,5 +1,5 @@
 import { decode, encode } from "./deps.ts";
-import type { Cookie } from './deps.ts'
+import type { Cookie } from "./deps.ts";
 import type { CookieConfig } from "./types.d.ts";
 
 export const parseCookie = <T>(

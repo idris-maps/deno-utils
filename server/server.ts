@@ -3,7 +3,7 @@ import parseRequest from "./parse-request.ts";
 import initRes from "./respond.ts";
 import initRouter from "./match-route.ts";
 import { parseCookie } from "./cookie.ts";
-import type { Config, Logger, Router, CookieConfig } from "./types.d.ts";
+import type { Config, CookieConfig, Logger, Router } from "./types.d.ts";
 
 const requestHandler = <Local, CookieContent>(
   router: Router<Local, CookieContent>,

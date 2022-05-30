@@ -4,7 +4,7 @@ import { renderString } from "./jsx.ts";
 import type { Cookie } from "./deps.ts";
 import { setCookie } from "./deps.ts";
 import { createCookie } from "./cookie.ts";
-import type { Logger, CookieConfig } from "./types.d.ts";
+import type { CookieConfig, Logger } from "./types.d.ts";
 
 type LogResponse = (type: string, d: object) => void;
 
