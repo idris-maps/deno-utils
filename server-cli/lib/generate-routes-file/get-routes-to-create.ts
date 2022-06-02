@@ -35,11 +35,18 @@ const getEndpointPath = ([_, ...rest]: string[]) =>
     .map((d) => d.startsWith("[") && d.endsWith("]") ? ":" + d.slice(1, -1) : d)
     .join("/");
 
+const fixFileNamePart = (part: string) => {
+  if (part.startsWith("[") && part.endsWith("]")) {
+    return part.slice(1, -1)
+  }
+  if (part === '*') {
+    return 'wildcard'
+  }
+  return part
+}
+
 const getFileName = (parts: string[], method: string) =>
-  [...parts, method]
-    .map((d) => d.startsWith("[") && d.endsWith("]") ? d.slice(1, -1) : d).join(
-      "_",
-    );
+  [...parts, method].map(fixFileNamePart).join("_");
 
 const parseFilePath = (filePath: string) => {
   const path = getPathFromRoutes(filePath);

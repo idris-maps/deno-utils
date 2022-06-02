@@ -10,20 +10,17 @@ const files = (version: string) => ({
   // ---------------
 
   "deps.ts": `
-import _server from "https://deno.land/x/anders@${version}/server/mod.ts";
-import { h as _h } from "https://deno.land/x/anders@${version}/server/jsx.ts";
-export type { Handler, Endpoint } from "https://deno.land/x/anders@${version}/server/types.d.ts";
-  
-export const server = _server;
-export const h = _h;    
+export { default as server } from "https://deno.land/x/anders@${version}/server/mod.ts";
+export { h } from "https://deno.land/x/anders@${version}/server/jsx.ts";
+export type { Handler, Endpoint } from "https://deno.land/x/anders@${version}/server/types.d.ts";  
   `,
 
   // ---------------
 
   "local.ts": `
-  import type {
-    Handler as _Handler,
-    Endpoint as _Endpoint,
+import type {
+  Handler as _Handler,
+  Endpoint as _Endpoint,
 } from "./deps.ts";
 
 export interface Local {
