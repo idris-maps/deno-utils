@@ -11,7 +11,7 @@ export default async (utilsVersion: string, dir?: string) => {
 
   const files = createFiles(utilsVersion).map((d) => ({
     path: folder + "/" + d.file,
-    data: d.content.trim() + '\n',
+    data: d.content.trim() + "\n",
   }));
 
   return Promise.all(

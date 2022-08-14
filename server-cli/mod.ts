@@ -2,9 +2,10 @@ import init from "./init/mod.ts";
 import createRoute from "./create-route/mod.ts";
 import generateRoutesFile from "./generate-routes-file/mod.ts";
 import * as msg from "./msg.ts";
-import { readArg } from './deps.ts'
+import { readArg } from "./deps.ts";
 
-const isString = (d: string | boolean | undefined): d is string => String(d) === d
+const isString = (d: string | boolean | undefined): d is string =>
+  String(d) === d;
 
 const UTILS_VERSION = "1.0.0";
 
@@ -29,8 +30,7 @@ if (op === "init") {
 
   if (!isString(path)) console.log(msg.missingPath);
   if (!isString(method)) console.log(msg.missingMethod);
-
-} else if (op === 'generate-routes-file') {
+} else if (op === "generate-routes-file") {
   await generateRoutesFile();
 
   console.log(msg.generatedRoutesFile);

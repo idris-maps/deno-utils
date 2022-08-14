@@ -38,7 +38,7 @@ const isString = (d: string | AsyncIterableIterator<string>): d is string =>
   typeof d === "string";
 
 export default (handlers: CodeBlockHandlers[]) =>
-  (input: string | AsyncIterableIterator<string>) =>
-    isString(input)
-      ? fromString(md2html, handleCodeBlocks(handlers), input)
-      : fromGenerator(md2html, handleCodeBlocks(handlers), input);
+(input: string | AsyncIterableIterator<string>) =>
+  isString(input)
+    ? fromString(md2html, handleCodeBlocks(handlers), input)
+    : fromGenerator(md2html, handleCodeBlocks(handlers), input);

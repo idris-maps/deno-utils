@@ -33,13 +33,13 @@ const getEndpointPath = ([_, ...rest]: string[]) =>
 
 const fixFileNamePart = (part: string) => {
   if (part.startsWith("[") && part.endsWith("]")) {
-    return '$' + part.slice(1, -1)
+    return "$" + part.slice(1, -1);
   }
-  if (part === '*') {
-    return '$wildcard'
+  if (part === "*") {
+    return "$wildcard";
   }
-  return part
-}
+  return part;
+};
 
 const getFileName = (parts: string[], method: string) =>
   [...parts, method].map(fixFileNamePart).join("_");

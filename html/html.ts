@@ -45,7 +45,8 @@ const compareNext = function* (iterator: Gen<string>): Gen<string> {
   }
 };
 
-const pipe = (...funcs: Array<(d: Gen<string>) => Gen<string>>) =>
+const pipe =
+  (...funcs: Array<(d: Gen<string>) => Gen<string>>) =>
   (iterator: Gen<string>) => funcs.reduce((d, f) => f(d), iterator);
 
 const minify = (html: string) => {

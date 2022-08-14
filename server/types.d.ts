@@ -23,7 +23,7 @@ export interface Req {
 export type Handler = (
   req: Req,
   res: Res,
-  log?: Logger
+  log?: Logger,
 ) => Response | Promise<Response>;
 
 export interface RouterResponse {

@@ -43,6 +43,6 @@ const getContent = (routes: RouteToCreate[]) =>
     importRoutes(routes),
     allRoutes(routes),
     exportDefault,
-  ].join("\n\n") + '\n';
+  ].join("\n\n") + "\n";
 
 export default getContent;

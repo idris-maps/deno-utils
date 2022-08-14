@@ -8,8 +8,8 @@ import stackedBar from "./stacked-bar.ts";
 import { parseDsv, updateSvgAttributes } from "./deps.ts";
 import type { CodeBlockHandlers, DsvData, SvgAttrs } from "./deps.ts";
 
-const wrap = (func: (d: DsvData) => Promise<string>) =>
-  async (content: string) => {
+const wrap =
+  (func: (d: DsvData) => Promise<string>) => async (content: string) => {
     const data = await parseDsv(content);
     const svg = await func(data);
     const fix = (attrs: SvgAttrs) =>

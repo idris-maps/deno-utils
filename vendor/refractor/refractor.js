@@ -1119,7 +1119,9 @@ var Cl = o((vR, wl) => {
                 v = j)
               : (_ || x(Rl, F),
                 v = parseInt(I, vt[M]),
-                Wy(v) ? (x(Nl, F), v = ye(zy)) : v in El
+                Wy(v)
+                  ? (x(Nl, F), v = ye(zy))
+                  : v in El
                   ? (x(Rt, F), v = El[v])
                   : (ee = "",
                     Yy(v) && x(Rt, F),
@@ -15327,8 +15329,9 @@ var Uf = o((UN, Ff) => {
           },
           output: /.(?:.*(?:[\r\n]|.$))*/,
         },
-          t.languages["sh-session"] = t.languages.shellsession =
-            t.languages["shell-session"];
+          t.languages["sh-session"] =
+            t.languages.shellsession =
+              t.languages["shell-session"];
       }(e);
   }
 });
@@ -20242,9 +20245,8 @@ function tS(e, t) {
   }
 }
 function rS(e) {
-  return "<!" + (e.upperDoctype ? "DOCTYPE" : "doctype") + (e.tightDoctype
-    ? ""
-    : " ") +
+  return "<!" + (e.upperDoctype ? "DOCTYPE" : "doctype") +
+    (e.tightDoctype ? "" : " ") +
     "html>";
 }
 function lt(e, t, r, a) {

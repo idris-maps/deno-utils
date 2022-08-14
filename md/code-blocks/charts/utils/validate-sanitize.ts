@@ -18,7 +18,8 @@ const validate = (validators: Array<(d: any) => boolean>) => {
     data.some((row) => !isValidRow(columns, row));
 };
 
-const sanitize = (to: (StringConstructor | NumberConstructor)[]) =>
+const sanitize =
+  (to: (StringConstructor | NumberConstructor)[]) =>
   ({ columns, data }: DsvData) =>
     data.map((row) =>
       columns.reduce((r, column, i) => {

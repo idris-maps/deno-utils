@@ -36,7 +36,7 @@ export const routeCreated = (path: string, method: string) => `
 
 export const generatedRoutesFile = `
   generated "routes.ts" file
-`
+`;
 
 export const help = (version: string) => `
   ------------------------------
