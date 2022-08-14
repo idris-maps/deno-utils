@@ -1,37 +1,39 @@
-import init from "./lib/init/mod.ts";
-import createRoute from "./lib/create-route/mod.ts";
-import generateRoutesFile from "./lib/generate-routes-file/mod.ts";
-import * as msg from "./lib/msg.ts";
+import init from "./init/mod.ts";
+import createRoute from "./create-route/mod.ts";
+import generateRoutesFile from "./generate-routes-file/mod.ts";
+import * as msg from "./msg.ts";
+import { readArg } from './deps.ts'
 
-const UTILS_VERSION = "v0.0.12";
+const isString = (d: string | boolean | undefined): d is string => String(d) === d
+
+const UTILS_VERSION = "1.0.0";
 
 const [op, ...args] = Deno.args;
-
-const getArg = (prefix: string) => {
-  const found = args.find((d) => d.startsWith("--" + prefix + "="));
-  return found ? found.split("=")[1] : undefined;
-};
 
 if (op === "init") {
   const dir = args[0];
   await init(UTILS_VERSION, dir);
-  await createRoute("get", "/", undefined, dir);
+  await createRoute("get", "/", dir);
   await generateRoutesFile(dir);
 
   console.log(msg.init(dir));
 } else if (op === "route") {
-  const path = getArg("path");
-  const method = getArg("method");
-  const tsx = Boolean(args.find((d) => d === "--tsx"));
+  const path = readArg("path");
+  const method = readArg("method");
 
-  if (path && method) {
-    await createRoute(method, path, tsx);
+  if (isString(path) && isString(method)) {
+    await createRoute(method, path);
     await generateRoutesFile();
-    console.log(msg.routeCreated(path, method, tsx));
+    console.log(msg.routeCreated(path, method));
   }
 
-  if (!path) console.log(msg.missingPath);
-  if (!method) console.log(msg.missingMethod);
+  if (!isString(path)) console.log(msg.missingPath);
+  if (!isString(method)) console.log(msg.missingMethod);
+
+} else if (op === 'generate-routes-file') {
+  await generateRoutesFile();
+
+  console.log(msg.generatedRoutesFile);
 } else {
   console.log(msg.help(UTILS_VERSION));
 }

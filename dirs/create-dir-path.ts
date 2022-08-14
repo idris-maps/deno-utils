@@ -24,8 +24,14 @@ const createIfNotExist = async (
   return createIfNotExist(path + "/" + next, rest);
 };
 
-export default async (pathParts: string[], dir?: string) =>
-  createIfNotExist(
-    dir ? `./${dir}` : ".",
-    pathParts,
-  );
+const createFromParts = (pathParts: string[], rootdir: string) =>
+  createIfNotExist(rootdir, pathParts);
+
+
+const getParts = (path: string) =>
+  path.split("/").filter((d) => d.trim() !== "");
+
+const createDirPath = (path: string, rootdir?: string) =>
+  createFromParts(getParts(path), rootdir || '.')
+
+export default createDirPath;
