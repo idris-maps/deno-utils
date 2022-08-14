@@ -1,16 +1,14 @@
-import type { Cookie } from "./deps.ts";
 import type { Res } from "./respond.ts";
 
 export type Method = Request["method"];
 
-export interface Endpoint<Local, CookieContent = any> {
+export interface Endpoint {
   path: string;
   method: Method;
-  handler: Handler<Local, CookieContent>;
+  handler: Handler;
 }
 
-export interface Req<CookieContent> {
-  cookies: Record<string, string>;
+export interface Req {
   data: Record<string, unknown>;
   files: File[];
   headers: Record<string, string>;
@@ -18,42 +16,39 @@ export interface Req<CookieContent> {
   params: Record<string, string>;
   query: Record<string, string>;
   request: Request;
+  requestId: string;
   url: URL;
-  user?: CookieContent;
 }
 
-export type Handler<Local, CookieContent = any> = (
-  req: Req<CookieContent>,
-  res: Res<CookieContent>,
-  local: Local,
+export type Handler = (
+  req: Req,
+  res: Res,
+  log?: Logger
 ) => Response | Promise<Response>;
 
-export interface RouterResponse<Local, CookieContent = any> {
-  handler: Handler<Local, CookieContent>;
+export interface RouterResponse {
+  handler: Handler;
   params: {
     [key: string]: string;
   };
 }
 
-export type Router<Local, CookieContent = any> = (
+export type Router = (
   method: Method,
   path: string,
-) => RouterResponse<Local, CookieContent> | undefined;
+) => RouterResponse | undefined;
 
-export interface LogContent extends Record<string, any> {
-  type: "info" | "warn" | "error";
+export interface LogContent extends Record<string, unknown> {
+  level: "info" | "warn" | "error";
   requestId: string;
   event: string;
+  status?: number;
 }
 
 export type Logger = (d: LogContent) => void;
 
-export type CookieConfig = Omit<Cookie, "value">;
-
-export interface Config<Local, CookieContent = any> {
-  port?: number;
-  routes: Endpoint<Local, CookieContent>[];
-  local: Local;
+export interface Config {
+  port: number;
+  routes: Endpoint[];
   log?: Logger;
-  cookie?: CookieConfig;
 }

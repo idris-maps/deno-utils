@@ -2,59 +2,50 @@ import { serve, ServeHandler } from "./deps.ts";
 import parseRequest from "./parse-request.ts";
 import initRes from "./respond.ts";
 import initRouter from "./match-route.ts";
-import { parseCookie } from "./cookie.ts";
-import type { Config, CookieConfig, Logger, Router } from "./types.d.ts";
+import type { Config, Logger, Router } from "./types.d.ts";
 
-const requestHandler = <Local, CookieContent>(
-  router: Router<Local, CookieContent>,
-  local: Local,
-  cookieConfig?: CookieConfig,
+const requestHandler = <CookieContent>(
+  router: Router,
   log?: Logger,
 ): ServeHandler =>
-  async (request: Request): Promise<Response> => {
-    const requestId = crypto.randomUUID();
-    try {
-      const req = await parseRequest<CookieContent>(request);
-      const cookieContent = parseCookie<CookieContent>(
-        req.cookies,
-        cookieConfig,
-      );
-      const res = initRes<CookieContent>({
-        cookieConfig,
-        cookieContent,
-        req: request,
-        requestId,
-        logger: log,
-      });
+async (request: Request): Promise<Response> => {
+  const requestId = crypto.randomUUID();
+  try {
+    const req = await parseRequest(request, requestId);
+    const res = initRes<CookieContent>({
+      req: request,
+      requestId,
+      logger: log,
+    });
 
-      if (log) {
-        log({ type: "info", requestId, event: "call", req });
-      }
-      const route = router(req.method, req.url.pathname);
-      if (!route) return res.status(404);
-
-      const { handler, params } = route;
-      return handler({ ...req, params, user: cookieContent }, res, local);
-    } catch (e) {
-      if (log) {
-        log({
-          type: "error",
-          requestId,
-          event: "handler-error",
-          errorMessage: e?.message,
-          error: e,
-        });
-        log({ type: "info", requestId, event: "response", status: 500 });
-      }
-      return new Response(undefined, { status: 500 });
+    if (log) {
+      log({ level: "info", requestId, event: "request", req });
     }
-  };
+    const route = router(req.method, req.url.pathname);
+    if (!route) return res.status(404);
 
-const init = <Local, CookieContent = any>(
-  { port = 3000, routes, local, log, cookie }: Config<Local, CookieContent>,
+    const { handler, params } = route;
+    return handler({ ...req, params }, res, log);
+  } catch (e) {
+    if (log) {
+      log({
+        level: "error",
+        requestId,
+        event: "handler-error",
+        errorMessage: e?.message,
+        error: e,
+      });
+      log({ level: "info", requestId, event: "response", status: 500 });
+    }
+    return new Response(undefined, { status: 500 });
+  }
+};
+
+const init = (
+  { port, routes, log }: Config,
 ) => {
   const router = initRouter(routes);
-  const handleRequest = requestHandler(router, local, cookie, log);
+  const handleRequest = requestHandler(router, log);
 
   console.log(`Started on port ${port}`);
   serve(handleRequest, { port });

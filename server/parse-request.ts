@@ -1,5 +1,4 @@
 import type { Req } from "./types.d.ts";
-import { getCookies } from "./deps.ts";
 
 const getQuery = (url: URL) => {
   const params = new URLSearchParams(url.search);
@@ -53,14 +52,14 @@ const getBody = async (request: Request): Promise<ReqBody> => {
   return { data: {}, files: [] };
 };
 
-export default async <CookieContent>(
+export default async (
   request: Request,
-): Promise<Req<CookieContent>> => {
+  requestId: string,
+): Promise<Req> => {
   const { data, files } = await getBody(request);
   const url = new URL(request.url);
 
   return {
-    cookies: getCookies(request.headers),
     data,
     files,
     headers: getHeaders(request),
@@ -68,6 +67,7 @@ export default async <CookieContent>(
     params: {},
     query: getQuery(url),
     request,
+    requestId,
     url: new URL(request.url),
   };
 };

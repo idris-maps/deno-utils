@@ -1,33 +1,26 @@
-import { serveFile } from "./serve-file.ts";
-import type { El } from "./jsx.ts";
-import { renderString } from "./jsx.ts";
-import type { Cookie } from "./deps.ts";
-import { setCookie } from "./deps.ts";
-import { createCookie } from "./cookie.ts";
-import type { CookieConfig, Logger } from "./types.d.ts";
+import { serveFile } from "./deps.ts";
+import type { Logger } from "./types.d.ts";
 
-type LogResponse = (type: string, d: object) => void;
+type LogResponse = (type: string, d: Record<string, unknown>) => void;
 
 interface ResponseOptions {
-  headers?: Record<string, string>;
+  mutateHeaders?: (headers: Headers) => void;
   status?: number;
 }
 
-const getHeaders = ({ cookie, headers, contentType, redirectUrl }: {
-  cookie?: Cookie;
-  headers?: Record<string, string>;
+const getHeaders = ({ contentType, redirectUrl, mutateHeaders }: {
   contentType?: string;
   redirectUrl?: string;
+  mutateHeaders?: (headers: Headers) => void;
 }) => {
-  const head = new Headers({
-    ...(headers || {}),
+  const headers = new Headers({
     ...(contentType ? { "Content-Type": contentType } : {}),
     ...(redirectUrl ? { "Location": redirectUrl } : {}),
   });
-  if (cookie) {
-    setCookie(head, cookie);
+  if (mutateHeaders) {
+    mutateHeaders(headers);
   }
-  return head;
+  return headers;
 };
 
 type JSONResponse = (
@@ -35,23 +28,20 @@ type JSONResponse = (
   options?: ResponseOptions,
 ) => Response;
 
-const json = (log: LogResponse, cookie?: Cookie): JSONResponse =>
-  (data, options) => {
-    const status = options?.status || 200;
-    const headers = getHeaders({
-      contentType: "application/json",
-      cookie,
-      headers: options?.headers,
-    });
-    log("json", { status, headers, data });
-    return new Response(
-      data ? JSON.stringify(data) : undefined,
-      {
-        status,
-        headers,
-      },
-    );
-  };
+const json = (log: LogResponse): JSONResponse => (data, options) => {
+  const headers = getHeaders({
+    contentType: "application/json",
+    mutateHeaders: options?.mutateHeaders,
+  });
+  log("json", { status, headers, data });
+  return new Response(
+    data ? JSON.stringify(data) : undefined,
+    {
+      status: options?.status || 200,
+      headers,
+    },
+  );
+};
 
 const defaultMessage: { [key: number]: string } = {
   400: "Bad Request",
@@ -63,7 +53,7 @@ const defaultMessage: { [key: number]: string } = {
 
 interface StatusResponseOptions {
   data?: unknown;
-  headers?: { [key: string]: string };
+  mutateHeaders?: (headers: Headers) => void;
   message?: string;
 }
 
@@ -78,115 +68,88 @@ const getStatusBody = (code: number, message?: string, data?: unknown) => {
   return data || msg || undefined;
 };
 
-const status = (log: LogResponse, cookie?: Cookie): StatusResponse =>
-  (code, options) =>
-    json(log, cookie)(
-      getStatusBody(code, options?.message, options?.data),
-      { status: code, headers: options?.headers },
-    );
+const status = (log: LogResponse): StatusResponse => (code, options) =>
+  json(log)(
+    getStatusBody(code, options?.message, options?.data),
+    { status: code, mutateHeaders: options?.mutateHeaders },
+  );
 
 type HTMLResponse = (
   htmlString: string,
   options?: ResponseOptions,
 ) => Response;
 
-const html = (log: LogResponse, cookie?: Cookie): HTMLResponse =>
-  (htmlString, options) => {
-    const headers = getHeaders({
-      contentType: "text/html",
-      cookie,
-      headers: options?.headers,
-    });
+const html = (log: LogResponse): HTMLResponse => (htmlString, options) => {
+  const headers = getHeaders({
+    contentType: "text/html",
+    mutateHeaders: options?.mutateHeaders,
+  });
 
-    log("html", { status: 200 });
+  log("html", { status: 200 });
 
-    return new Response(
-      "<!DOCTYPE html>\n" + htmlString,
-      { status: 200, headers },
-    );
-  };
-
-type JSXResponse = (
-  jsx: El | string | null,
-  options?: ResponseOptions & { doctype?: "none" | string },
-) => Response;
-
-const jsx = (log: LogResponse, cookie?: Cookie): JSXResponse =>
-  (jsx, _options) => {
-    const { doctype, ...options } = (_options || {});
-    const _html = doctype === "none"
-      ? renderString(jsx)
-      : [doctype || "<!DOCTYPE html>", renderString(jsx)].join("\n");
-    return html(log, cookie)(_html, options);
-  };
+  return new Response(
+    "<!DOCTYPE html>\n" + htmlString,
+    { status: 200, headers },
+  );
+};
 
 type RedirectResponse = (
   url: string,
   options?: ResponseOptions,
 ) => Response;
 
-const redirect = (log: LogResponse, cookie?: Cookie): RedirectResponse =>
-  (url, options) => {
-    const headers = getHeaders({
-      cookie,
-      headers: options?.headers,
-      redirectUrl: url,
-    });
-    const status = options?.status || 301;
-    log("redirect", { status, headers });
+const redirect = (log: LogResponse): RedirectResponse => (url, options) => {
+  const headers = getHeaders({
+    mutateHeaders: options?.mutateHeaders,
+    redirectUrl: url,
+  });
+  const status = options?.status || 301;
+  log("redirect", { status, headers });
 
-    return new Response(undefined, { status, headers });
-  };
+  return new Response(undefined, { status, headers });
+};
 
 type FileResponse = (filePath: string) => Promise<Response>;
 
 const file = (req: Request, log: LogResponse): FileResponse =>
-  async (filePath: string) => {
-    try {
-      const [file, fileInfo] = await Promise.all([
-        Deno.open(filePath),
-        Deno.stat(filePath),
-      ]);
-      log("file", { status: 200, filePath });
-      return serveFile(req, filePath, file, fileInfo);
-    } catch (err) {
-      if (err.name === "PermissionDenied") {
-        log("file", { type: "error", event: err.name, message: err.message });
-      }
+async (
+  filePath: string,
+) => {
+  try {
+    const fileInfo = await Deno.stat(filePath);
+    if (!fileInfo.isFile) {
       return status(log)(404);
     }
-  };
+    log("file", { status: 200, filePath, fileInfo });
+    return serveFile(req, filePath);
+  } catch {
+    return status(log)(404);
+  }
+};
 
-export interface Res<T> {
+export interface Res {
   file: FileResponse;
   html: HTMLResponse;
   json: JSONResponse;
-  jsx: JSXResponse;
   redirect: RedirectResponse;
   status: StatusResponse;
-  setCookie: (d: T) => void;
-  removeCookie: () => void;
 }
 
-interface Props<T> {
-  cookieConfig?: CookieConfig;
-  cookieContent?: T;
+interface Props {
   logger?: Logger;
   req: Request;
   requestId: string;
 }
 
 const init = <T>({
-  cookieConfig,
-  cookieContent,
   logger,
   req,
   requestId,
-}: Props<T>): Res<T> => {
+}: Props): Res => {
   const log: LogResponse = (responseType, data) =>
     logger
       ? logger({
-        type: "info",
+        level: "info",
         requestId,
         event: "response",
         responseType,
@@ -194,28 +157,16 @@ const init = <T>({
       })
       : undefined;
 
-  let cookie: Cookie | undefined = createCookie(cookieContent, cookieConfig);
-
   return {
     file: file(req, log),
     html: (htmlString: string, options?: ResponseOptions) =>
-      html(log, cookie)(htmlString, options),
+      html(log)(htmlString, options),
     json: (data?: unknown, options?: ResponseOptions) =>
-      json(log, cookie)(data, options),
-    jsx: (jsxElement: El | string | null, options?: ResponseOptions) =>
-      jsx(log, cookie)(jsxElement, options),
+      json(log)(data, options),
     redirect: (url: string, options?: ResponseOptions) =>
-      redirect(log, cookie)(url, options),
+      redirect(log)(url, options),
     status: (code: number, options?: StatusResponseOptions) =>
-      status(log, cookie)(code, options),
-    setCookie: (d: T) => {
-      cookie = createCookie(d, cookieConfig);
-    },
-    removeCookie: () => {
-      if (cookieConfig) {
-        cookie = { ...cookieConfig, value: "", expires: new Date(0) };
-      }
-    },
+      status(log)(code, options),
   };
 };
 

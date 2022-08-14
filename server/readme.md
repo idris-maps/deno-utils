@@ -2,4 +2,4 @@
 
 A simple HTTP server
 
-Checkout the `example` folder
+Checkout the commented example in the `example` folder

@@ -33,7 +33,7 @@ const splitPath = (path: string): string[] =>
     .map((d) => decodeURIComponent(d).trim())
     .filter((d) => d !== "");
 
-const createEndpointTree = <T>(endpoints: Endpoint<T>[]): RouteTree =>
+const createEndpointTree = <T>(endpoints: Endpoint[]): RouteTree =>
   endpoints.reduce(
     (tree, { path, method }) => addToTree(tree, splitPath(path), method),
     {},
@@ -123,9 +123,9 @@ const getMapKey = (
   { method, path }: { method: Method; path: string },
 ): string => `${method}____${path}`;
 
-export default <T>(endpoints: Endpoint<T>[]): Router<T> => {
+export default <T>(endpoints: Endpoint[]): Router => {
   const tree = createEndpointTree(endpoints);
-  const map = new Map<string, Handler<T>>();
+  const map = new Map<string, Handler>();
   endpoints.map((d) => {
     map.set(getMapKey(d), d.handler);
   });
