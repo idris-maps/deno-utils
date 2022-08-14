@@ -1,91 +1,84 @@
-import server from "../mod.ts";
-import jsxPage from "./page.jsx";
+import serve from "../mod.ts";
+import type { Endpoint } from "../mod.ts";
+import db from "./fake-db.ts";
+import { _format } from "https://deno.land/std@0.152.0/path/_util.ts";
 
-// fake async database
-const map = new Map<string, object>();
-const db = {
-  insert: async (data: object) => {
-    const _id = crypto.randomUUID();
-    map.set(_id, data);
-    return { ...data, _id };
+const routes: Endpoint[] = [
+  // res.html adds the doctype
+  // query parameters can be accessed with req.query
+  {
+    method: "GET",
+    path: "/",
+    handler: (req, res) =>
+      res.html(`<h1>Hello ${req.query.name || "world"}</h1>`),
   },
-  get: async (_id: string) => {
-    const data = map.get(_id);
-    return data ? { ...data, _id } : undefined;
+  // req.data is either the json body or url encoded form data depending on content type
+  {
+    path: "/api/collection",
+    method: "POST",
+    handler: async (req, res) => res.json(await db.insert(req.data)),
   },
-};
+  {
+    path: "/api/collection",
+    method: "GET",
+    handler: async (_, res) => res.json(await db.getAll()),
+  },
+  // url parameters are defined with a colon ":" in the path and accessed with req.params
+  {
+    path: "/api/collection/:id",
+    method: "GET",
+    handler: async (req, res) => {
+      const data = await db.getById(req.params.id);
+      return data ? res.json(data) : res.status(404);
+    },
+  },
+  {
+    path: "/redirect",
+    method: "GET",
+    handler: (_, res) => res.redirect("/?name=redirected"),
+  },
+  // the path to the file is relatîve to the start file (in this case "server.ts")
+  {
+    path: "/assets/*",
+    method: "GET",
+    handler: (req, res) => res.file(`assets/${req.params["*"]}`),
+  },
+  // headers can be modified with the "mutateHeaders" option
+  {
+    path: "/headers",
+    method: "GET",
+    handler: (_, res) =>
+      res.html(
+        '<p>Added a "foo" header</p>',
+        {
+          mutateHeaders: (headers) => {
+            headers.set("foo", "bar");
+          },
+        },
+      ),
+  },
+  // handlers may return any "Response"
+  {
+    path: "/custom",
+    method: "GET",
+    handler: (req, _, log) => {
+      if (log) {
+        // log successful response. optional. this is done automatically for other responses
+        log({
+          level: "info",
+          requestId: req.requestId,
+          event: "response",
+          status: 200,
+        });
+      }
+      // the handler must return a "Response" or "Promise<Response>"
+      return new Response("Custom response");
+    },
+  },
+];
 
-interface Local {
-  db: {
-    insert: (data: object) => Promise<{
-      _id: string;
-    }>;
-    get: (_id: string) => Promise<
-      {
-        _id: string;
-      } | undefined
-    >;
-  };
-}
-
-// local is accessible in the route handlers
-const local: Local = { db };
-
-// type definition of cookie content
-interface CookieContent {
-  id: number;
-  name: string;
-}
-
-server<Local, CookieContent>({
+serve({
+  routes,
   port: 3000,
-  local,
-  cookie: {
-    name: "my-cookie",
-    secure: true,
-  },
-  routes: [
-    {
-      path: "/html",
-      method: "GET",
-      handler: (req, res) => res.html(`Hello ${req.query.name || "world"}`),
-    },
-    {
-      path: "/json",
-      method: "POST",
-      handler: async (req, res, local) =>
-        res.json(await local.db.insert(req.data)),
-    },
-    {
-      path: "/json/:id",
-      method: "GET",
-      handler: async (req, res, local) => {
-        const data = await local.db.get(req.params.id);
-        return data ? res.json(data) : res.status(404);
-      },
-    },
-    {
-      path: "/jsx/:name",
-      method: "GET",
-      handler: (req, res) => res.jsx(jsxPage(req.params.name)),
-    },
-    {
-      path: "/redirect",
-      method: "GET",
-      handler: (_, res) => {
-        res.setCookie({ id: 1, name: "User" });
-        return res.redirect("/redirected");
-      },
-    },
-    {
-      path: "/redirected",
-      method: "GET",
-      handler: (req, res) => res.json(req.user),
-    },
-    {
-      path: "/assets/*",
-      method: "GET",
-      handler: (req, res) => res.file(`assets/${req.params["*"]}`),
-    },
-  ],
+  log: console.log, // optional. ignored if undefined
 });
