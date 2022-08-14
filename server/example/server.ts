@@ -1,7 +1,6 @@
 import serve from "../mod.ts";
 import type { Endpoint } from "../mod.ts";
 import db from "./fake-db.ts";
-import { _format } from "https://deno.land/std@0.152.0/path/_util.ts";
 
 const routes: Endpoint[] = [
   // res.html adds the doctype
