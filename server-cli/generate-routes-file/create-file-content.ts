@@ -1,4 +1,4 @@
-import type { RouteToCreate } from "./get-routes-to-create.ts";
+import type { RouteToCreate } from "./types.d.ts";
 
 const comment = [
   "/*",
@@ -7,7 +7,7 @@ const comment = [
   " */",
 ].join("\n");
 
-const importEndpointType = `import type { Endpoint } from "./local.ts";`;
+const importEndpointType = `import type { Endpoint } from "$/deps.ts";`;
 
 const importRoute = ({ file }: RouteToCreate) =>
   `import ${file.name} from "${file.path}";`;
@@ -43,6 +43,6 @@ const getContent = (routes: RouteToCreate[]) =>
     importRoutes(routes),
     allRoutes(routes),
     exportDefault,
-  ].join("\n\n");
+  ].join("\n\n") + '\n';
 
 export default getContent;

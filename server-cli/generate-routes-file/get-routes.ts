@@ -1,9 +1,5 @@
-import readDir from "./read-dir-deep.ts";
-import type { Endpoint } from "../deps.ts";
-
-export interface RouteToCreate extends Omit<Endpoint<any>, "handler"> {
-  file: { name: string; path: string };
-}
+import { readDirDeep } from "../deps.ts";
+import type { RouteToCreate } from "./types.d.ts";
 
 const ALLOWED_METHODS = [
   "connect",
@@ -26,8 +22,8 @@ const getPathFromRoutes = (path: string) =>
   path
     .split("/")
     .reduce((r, d) => {
-      if (d === "routes") return `./routes`;
-      return r.startsWith("./routes") ? r + "/" + d : r;
+      if (d === "routes") return `$/routes`;
+      return r.startsWith("$/routes") ? r + "/" + d : r;
     }, "");
 
 const getEndpointPath = ([_, ...rest]: string[]) =>
@@ -37,10 +33,10 @@ const getEndpointPath = ([_, ...rest]: string[]) =>
 
 const fixFileNamePart = (part: string) => {
   if (part.startsWith("[") && part.endsWith("]")) {
-    return part.slice(1, -1)
+    return '$' + part.slice(1, -1)
   }
   if (part === '*') {
-    return 'wildcard'
+    return '$wildcard'
   }
   return part
 }
@@ -74,7 +70,7 @@ const isRoute = (d: RouteToCreate | undefined): d is RouteToCreate =>
   Boolean(d);
 
 const getRoutes = async (dir: string): Promise<RouteToCreate[]> => {
-  const files = await readDir(dir);
+  const files = await readDirDeep(dir);
   return files.map(parseFilePath).filter(isRoute);
 };
 

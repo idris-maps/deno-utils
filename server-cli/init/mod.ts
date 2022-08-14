@@ -1,4 +1,4 @@
-import files from "./files.ts";
+import createFiles from "./create-files.ts";
 
 export default async (utilsVersion: string, dir?: string) => {
   if (dir) {
@@ -9,13 +9,13 @@ export default async (utilsVersion: string, dir?: string) => {
 
   await Deno.mkdir(folder + "/routes");
 
-  const _files = files(utilsVersion).map((d) => ({
+  const files = createFiles(utilsVersion).map((d) => ({
     path: folder + "/" + d.file,
-    data: d.content.trim(),
+    data: d.content.trim() + '\n',
   }));
 
   return Promise.all(
-    _files.map(
+    files.map(
       ({ path, data }) => Deno.writeTextFile(path, data, { create: true }),
     ),
   );

@@ -2,7 +2,8 @@ const initCurrent = `
   server was initialized in the current directory
 
   RUN:
-  deno fmt
+  chmod u+x start.sh
+  ./start.sh
 `;
 
 const initInDir = (dir: string) => `
@@ -10,7 +11,8 @@ const initInDir = (dir: string) => `
 
   RUN:
   cd ${dir}
-  deno fmt
+  chmod u+x start.sh
+  ./start.sh
 `;
 
 export const init = (dir?: string) => dir ? initInDir(dir) : initCurrent;
@@ -27,15 +29,19 @@ export const missingMethod = `
   example: --method=GET
 `;
 
-export const routeCreated = (path: string, method: string, tsx?: boolean) => `
-  wrote file ${path}/${method.toLowerCase()}.ts${tsx ? "x" : ""}
+export const routeCreated = (path: string, method: string) => `
+  wrote file ${path}/${method.toLowerCase()}.ts
   added route ${method.toUpperCase()} ${path}
 `;
 
+export const generatedRoutesFile = `
+  generated "routes.ts" file
+`
+
 export const help = (version: string) => `
-  ---
-  server-cli version: ${version}
-  ---
+  ------------------------------
+   server-cli version: ${version}
+  ------------------------------
 
   COMMANDS:
 
@@ -49,5 +55,9 @@ export const help = (version: string) => `
     ARGS:
       * --path=PATH : the path of the route to create
       * --method=METHOD : the HTTP verb to use for the path
-      * --tsx : (optional) if the route is returning an HTML page written in TSX 
+ 
+  server-cli generate-routes-file
+    generates the "routes.ts" file
+
+    to be run after manually adding routes
 `;
