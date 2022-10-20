@@ -68,3 +68,11 @@ Deno.test("[html]", () => {
   assertEquals(space.input, space.expected);
   assertEquals(all.input, all.expected);
 });
+
+Deno.test("[html] should accept object as attributes", () => {
+  const input = html`
+    <div ${{ id: 'id', class: 'class' }} />
+  `
+  const expected = `<div id="id" class="class" />`
+  assertEquals(input, expected)
+})
