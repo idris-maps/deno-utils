@@ -9,13 +9,18 @@ function* generateInts() {
   }
 }
 
+const multiplyBy2 = map((d: number) => d * 2)
+const add1 = map((d: number) => d + 1)
+const remove3 = filter((d: number) => d !== 3)
+const stringify = map((d: number) => `NUM:${d}`)
+
+const multiplyBy2Async = map((d: number) => Promise.resolve(d * 2))
+const add1Async = map((d: number) => Promise.resolve(d + 1))
+const remove3Async = filter((d: number) => Promise.resolve(d !== 3))
+const stringifyAsync = map((d: number) => Promise.resolve(`NUM:${d}`))
+
 Deno.test("[iterate] sync", async () => {
   const ints = generateInts();
-
-  const multiplyBy2 = map((d: number) => d * 2)
-  const add1 = map((d: number) => d + 1)
-  const remove3 = filter((d: number) => d !== 3)
-  const stringify = map((d: number) => `NUM:${d}`)
 
   const transform = pipe(
     multiplyBy2,
@@ -34,16 +39,11 @@ Deno.test("[iterate] sync", async () => {
 Deno.test("[iterate] async", async () => {
   const ints = generateInts();
 
-  const multiplyBy2 = map((d: number) => Promise.resolve(d * 2))
-  const add1 = map((d: number) => Promise.resolve(d + 1))
-  const remove3 = filter((d: number) => Promise.resolve(d !== 3))
-  const stringify = map((d: number) => Promise.resolve(`NUM:${d}`))
-
   const transform = pipe(
-    multiplyBy2,
-    add1,
-    remove3,
-    stringify,
+    multiplyBy2Async,
+    add1Async,
+    remove3Async,
+    stringifyAsync,
   );
 
   const transformed = transform(ints);
@@ -56,16 +56,11 @@ Deno.test("[iterate] async", async () => {
 Deno.test("[iterate] mixed async/sync", async () => {
   const ints = generateInts();
 
-  const multiplyBy2 = map((d: number) => Promise.resolve(d * 2))
-  const add1 = map((d: number) => d + 1)
-  const remove3 = filter((d: number) => Promise.resolve(d !== 3))
-  const stringify = map((d: number) => `NUM:${d}`)
-
   const transform = pipe(
     multiplyBy2,
-    add1,
+    add1Async,
     remove3,
-    stringify,
+    stringifyAsync,
   );
 
   const transformed = transform(ints);
