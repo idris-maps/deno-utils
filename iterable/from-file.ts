@@ -1,20 +1,12 @@
-import { BufReader, TextProtoReader } from "./deps.ts";
+import { readableStreamFromReader, TextLineStream } from "./deps.ts";
 
-const isString = (d: unknown): d is string => String(d) === d;
+export const linesFromFile = async function* (filename: string) {
+  const file = await Deno.open(filename, { read: true })
+  const lines = readableStreamFromReader(file)
+    .pipeThrough(new TextDecoderStream())
+    .pipeThrough(new TextLineStream())
 
-export const fromFile = async function* (filename: string) {
-  const lines = new TextProtoReader(
-    new BufReader(await Deno.open(filename, { read: true })),
-  );
-
-  let hasMore = true;
-
-  while (hasMore) {
-    const line = await lines.readLine();
-    if (!isString(line)) {
-      hasMore = false;
-      return;
-    }
-    yield line;
+  for await (const line of lines) {
+    yield line
   }
-};
+}

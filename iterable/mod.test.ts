@@ -1,5 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.160.0/testing/asserts.ts";
-import { pipe, toArray, map, filter } from "./mod.ts";
+import { pipe, toArray, map, filter, linesFromFile } from "./mod.ts";
+import { getRelativePath } from '../relative-path/mod.ts'
 
 function* generateInts() {
   let i = 0;
@@ -69,3 +70,12 @@ Deno.test("[iterate] mixed async/sync", async () => {
 
   assertEquals(res, ["NUM:1", "NUM:5"]);
 });
+
+Deno.test('[iterate] linesFromFile', async () => {
+  const filename = getRelativePath(import.meta, './mod.ts')
+  console.log(await Deno.readTextFile(filename))
+  const lines = linesFromFile(filename);
+  const file = (await toArray(lines)).join('\n')
+
+  assertEquals(file, await Deno.readTextFile(filename))
+})

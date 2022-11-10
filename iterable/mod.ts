@@ -1,5 +1,5 @@
 export { pipe } from "./pipe.js";
-export { fromFile } from "./from-file.ts";
+export { linesFromFile } from "./from-file.ts";
 
 type AnyIterable<T> = Generator<T> | Iterable<T> | AsyncGenerator<T> | AsyncIterable<T>
 
