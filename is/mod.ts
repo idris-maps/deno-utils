@@ -22,10 +22,10 @@ export const isRecord = is<Record<string, unknown>>((d) =>
 // arrays
 
 export const isArrayOf = <T>(test: (d: unknown) => boolean) =>
-  is<T[]>(d => Array.isArray(d) && d.every(test))
+  is<T[]>((d) => Array.isArray(d) && d.every(test));
 
-export const isArrayOfStrings = isArrayOf<string>(isString)
+export const isArrayOfStrings = isArrayOf<string>(isString);
 
-export const isArrayOfBooleans = isArrayOf<boolean>(isBoolean)
+export const isArrayOfBooleans = isArrayOf<boolean>(isBoolean);
 
-export const isArrayOfNumbers = isArrayOf<number>(isNumber)
+export const isArrayOfNumbers = isArrayOf<number>(isNumber);

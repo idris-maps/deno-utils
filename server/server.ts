@@ -41,10 +41,13 @@ async (request: Request): Promise<Response> => {
   }
 };
 
-export const router = <CookieContent = undefined>(routes: Endpoint[], log: Logger | undefined) => {
+export const router = <CookieContent = undefined>(
+  routes: Endpoint[],
+  log: Logger | undefined,
+) => {
   const router = initRouter(routes);
   return requestHandler<CookieContent>(router, log);
-}
+};
 
 export const server = (
   { port, routes, log }: Config,
