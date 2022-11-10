@@ -10,7 +10,7 @@ const files = (version: string) => ({
   // ---------------
 
   "deps.ts": `
-export { default as server } from "https://deno.land/x/anders@v${version}/server/mod.ts";
+export { server } from "https://deno.land/x/anders@v${version}/server/mod.ts";
 export { default as html } from "https://deno.land/x/anders@v${version}/html/mod.ts";
 export { readArg } from "https://deno.land/x/anders@v${version}/args/mod.ts";
 export type { Endpoint, Handler } from "https://deno.land/x/anders@v${version}/server/types.d.ts";

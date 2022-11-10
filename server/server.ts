@@ -2,9 +2,9 @@ import { serve, ServeHandler } from "./deps.ts";
 import parseRequest from "./parse-request.ts";
 import initRes from "./respond.ts";
 import initRouter from "./match-route.ts";
-import type { Config, Logger, Router } from "./types.d.ts";
+import type { Config, Endpoint, Logger, Router } from "./types.d.ts";
 
-const requestHandler = <CookieContent>(
+export const requestHandler = <CookieContent>(
   router: Router,
   log?: Logger,
 ): ServeHandler =>
@@ -41,7 +41,12 @@ async (request: Request): Promise<Response> => {
   }
 };
 
-const init = (
+export const router = <CookieContent = undefined>(routes: Endpoint[], log: Logger | undefined) => {
+  const router = initRouter(routes);
+  return requestHandler<CookieContent>(router, log);
+}
+
+export const server = (
   { port, routes, log }: Config,
 ) => {
   const router = initRouter(routes);
@@ -50,5 +55,3 @@ const init = (
   console.log(`Started on port ${port}`);
   serve(handleRequest, { port });
 };
-
-export default init;
