@@ -1,12 +1,10 @@
 export { pipe } from "./pipe.js";
 export { fromFile } from "./from-file.ts";
 
-export type Func<A, B> =
-  | ((d: A) => Promise<B | undefined>)
-  | ((d: A) => B | undefined);
+type AnyIterable<T> = Generator<T> | Iterable<T> | AsyncGenerator<T> | AsyncIterable<T>
 
 export const toArray = async <T>(
-  iterable: AsyncGenerator<T> | AsyncIterable<T>,
+  iterable: AnyIterable<T>,
 ) => {
   const result: T[] = [];
   for await (const item of iterable) {
@@ -14,3 +12,19 @@ export const toArray = async <T>(
   }
   return result;
 };
+
+export const map = <A,B>(func: (d: A) => B) => {
+  return async function* (iterable: AnyIterable<A>) {
+    for await  (const item of iterable) {
+      yield func(item)
+    }
+  }
+}
+
+export const filter = <T>(func: (d: T) => boolean | Promise<boolean>) => {
+  return async function* (iterable: AnyIterable<T>) {
+    for await (const item of iterable) {
+      if (await func(item)) { yield item }
+    }
+  }
+}

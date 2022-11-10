@@ -1,33 +1,33 @@
 type Func<A, B> =
-  | ((d: A) => Promise<B | undefined>)
-  | ((d: A) => B | undefined);
+  | ((d: A) => Promise<B>)
+  | ((d: A) => B);
 
-export function pipe<A>(): (d: A) => AsyncGenerator<A> | AsyncIterable<A>;
+export function pipe<A>(): (d: A) => A;
 export function pipe<A, B>(
   f1: Func<A, B>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<B>;
+): (d: A) => B;
 export function pipe<A, B, C>(
   f1: Func<A, B>,
   f2: Func<B, C>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<C>;
+): (d: A) => C;
 export function pipe<A, B, C, D>(
   f1: Func<A, B>,
   f2: Func<B, C>,
   f3: Func<C, D>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<D>;
+): (d: A) => D;
 export function pipe<A, B, C, D, E>(
   f1: Func<A, B>,
   f2: Func<B, C>,
   f3: Func<C, D>,
   f4: Func<D, E>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<E>;
+): (d: A) => E;
 export function pipe<A, B, C, D, E, F>(
   f1: Func<A, B>,
   f2: Func<B, C>,
   f3: Func<C, D>,
   f4: Func<D, E>,
   f5: Func<E, F>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<F>;
+): (d: A) => F;
 export function pipe<A, B, C, D, E, F, G>(
   f1: Func<A, B>,
   f2: Func<B, C>,
@@ -35,7 +35,7 @@ export function pipe<A, B, C, D, E, F, G>(
   f4: Func<D, E>,
   f5: Func<E, F>,
   f6: Func<F, G>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<G>;
+): (d: A) => G;
 export function pipe<A, B, C, D, E, F, G, H>(
   f1: Func<A, B>,
   f2: Func<B, C>,
@@ -44,7 +44,7 @@ export function pipe<A, B, C, D, E, F, G, H>(
   f5: Func<E, F>,
   f6: Func<F, G>,
   f7: Func<G, H>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<H>;
+): (d: A) => H;
 export function pipe<A, B, C, D, E, F, G, H, I>(
   f1: Func<A, B>,
   f2: Func<B, C>,
@@ -54,7 +54,7 @@ export function pipe<A, B, C, D, E, F, G, H, I>(
   f6: Func<F, G>,
   f7: Func<G, H>,
   f8: Func<H, I>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<I>;
+): (d: A) => I;
 export function pipe<A, B, C, D, E, F, G, H, I, J>(
   f1: Func<A, B>,
   f2: Func<B, C>,
@@ -65,7 +65,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J>(
   f7: Func<G, H>,
   f8: Func<H, I>,
   f9: Func<I, J>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<J>;
+): (d: A) => J;
 export function pipe<A, B, C, D, E, F, G, H, I, J, K>(
   f1: Func<A, B>,
   f2: Func<B, C>,
@@ -77,7 +77,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K>(
   f8: Func<H, I>,
   f9: Func<I, J>,
   f10: Func<J, K>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<K>;
+): (d: A) => K;
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L>(
   f1: Func<A, B>,
   f2: Func<B, C>,
@@ -90,7 +90,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L>(
   f9: Func<I, J>,
   f10: Func<J, K>,
   f11: Func<K, L>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<L>;
+): (d: A) => L;
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M>(
   f1: Func<A, B>,
   f2: Func<B, C>,
@@ -104,7 +104,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M>(
   f10: Func<J, K>,
   f11: Func<K, L>,
   f12: Func<L, M>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<M>;
+): (d: A) => M;
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N>(
   f1: Func<A, B>,
   f2: Func<B, C>,
@@ -119,7 +119,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N>(
   f11: Func<K, L>,
   f12: Func<L, M>,
   f13: Func<M, N>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<N>;
+): (d: A) => N;
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(
   f1: Func<A, B>,
   f2: Func<B, C>,
@@ -135,7 +135,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(
   f12: Func<L, M>,
   f13: Func<M, N>,
   f14: Func<N, O>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<O>;
+): (d: A) => O;
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
   f1: Func<A, B>,
   f2: Func<B, C>,
@@ -152,7 +152,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
   f13: Func<M, N>,
   f14: Func<N, O>,
   f15: Func<O, P>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<P>;
+): (d: A) => P;
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
   f1: Func<A, B>,
   f2: Func<B, C>,
@@ -170,7 +170,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
   f14: Func<N, O>,
   f15: Func<O, P>,
   f16: Func<P, Q>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<Q>;
+): (d: A) => Q;
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R>(
   f1: Func<A, B>,
   f2: Func<B, C>,
@@ -189,7 +189,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R>(
   f15: Func<O, P>,
   f16: Func<P, Q>,
   f17: Func<Q, R>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<R>;
+): (d: A) => R;
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S>(
   f1: Func<A, B>,
   f2: Func<B, C>,
@@ -209,7 +209,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S>(
   f16: Func<P, Q>,
   f17: Func<Q, R>,
   f18: Func<R, S>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<S>;
+): (d: A) => S;
 export function pipe<
   A,
   B,
@@ -251,7 +251,7 @@ export function pipe<
   f17: Func<Q, R>,
   f18: Func<R, S>,
   f19: Func<S, T>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<T>;
+): (d: A) => T;
 export function pipe<
   A,
   B,
@@ -295,7 +295,7 @@ export function pipe<
   f18: Func<R, S>,
   f19: Func<S, T>,
   f20: Func<T, U>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<U>;
+): (d: A) => U;
 export function pipe<
   A,
   B,
@@ -341,7 +341,7 @@ export function pipe<
   f19: Func<S, T>,
   f20: Func<T, U>,
   f21: Func<U, V>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<V>;
+): (d: A) => V;
 export function pipe<
   A,
   B,
@@ -389,7 +389,7 @@ export function pipe<
   f20: Func<T, U>,
   f21: Func<U, V>,
   f22: Func<V, W>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<W>;
+): (d: A) => W;
 export function pipe<
   A,
   B,
@@ -439,7 +439,7 @@ export function pipe<
   f21: Func<U, V>,
   f22: Func<V, W>,
   f23: Func<W, X>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<X>;
+): (d: A) => X;
 export function pipe<
   A,
   B,
@@ -491,7 +491,7 @@ export function pipe<
   f22: Func<V, W>,
   f23: Func<W, X>,
   f24: Func<X, Y>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<Y>;
+): (d: A) => Y;
 export function pipe<
   A,
   B,
@@ -545,4 +545,4 @@ export function pipe<
   f23: Func<W, X>,
   f24: Func<X, Y>,
   f25: Func<Y, Z>,
-): (d: AsyncGenerator<A> | AsyncIterable<A>) => AsyncGenerator<Z>;
+): (d: A) => Z;
