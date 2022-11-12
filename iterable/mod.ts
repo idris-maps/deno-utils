@@ -174,3 +174,18 @@ export const forEach = <T>(func: (d: T, index: number) => void) => {
     return;
   };
 };
+
+export const find = <T>(
+  func: (d: T, index: number) => boolean | Promise<boolean>,
+) => {
+  let i = 0;
+  return async (iterable: AnyIterable<T>) => {
+    for await (const item of iterable) {
+      if (await func(item, i)) {
+        return item;
+      }
+      i++;
+    }
+    return undefined;
+  };
+};
