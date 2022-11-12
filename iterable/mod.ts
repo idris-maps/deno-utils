@@ -30,6 +30,14 @@ export const linesFromStdin = async function* () {
   }
 };
 
+export const linesFromString = async function* (d: string) {
+  const lines = d.split("\n");
+
+  for await (const line of lines) {
+    yield line;
+  }
+};
+
 // -- transforms --
 
 export const map = <A, B>(func: (d: A, index: number) => B) => {
@@ -150,7 +158,11 @@ export const toArray = async <T>(
   return result;
 };
 
-export type Reducer<A, B> = (previous: B, value: A, index: number) => B;
+export type Reducer<A, B> = (
+  previous: B,
+  value: A,
+  index: number,
+) => B | Promise<B>;
 
 export const reduce = <A, B>(reducer: Reducer<A, B>, initalValue: B) => {
   let i = 0;
@@ -164,7 +176,9 @@ export const reduce = <A, B>(reducer: Reducer<A, B>, initalValue: B) => {
   };
 };
 
-export const forEach = <T>(func: (d: T, index: number) => void) => {
+export const forEach = <T>(
+  func: (d: T, index: number) => void | Promise<void>,
+) => {
   let i = 0;
   return async (iterable: AnyIterable<T>): Promise<void> => {
     for await (const item of iterable) {
