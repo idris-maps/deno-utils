@@ -1,4 +1,4 @@
-import { parseCsv, parseYaml } from "./deps.ts";
+import { parseCsv, parseYaml } from "../deps.ts";
 
 const META_SEPARATOR = "---";
 

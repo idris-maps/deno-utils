@@ -1,7 +1,7 @@
 import { readableStreamFromReader, TextLineStream } from "./deps.ts";
 export { pipe } from "./pipe.js";
 
-type AnyIterable<T> =
+export type AnyIterable<T> =
   | Generator<T>
   | Iterable<T>
   | AsyncGenerator<T>
