@@ -16,7 +16,8 @@ export const isNumber = is<number>((d) =>
 // records
 
 export const isRecord = is<Record<string, unknown>>((d) =>
-  d && !Array.isArray(d) && Object.keys(d).every(isString)
+  d && !isString(d) && !isNumber(d) && !Array.isArray(d) &&
+  Object.keys(d).every(isString)
 );
 
 // arrays

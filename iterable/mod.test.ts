@@ -73,7 +73,6 @@ Deno.test("[iterate] mixed async/sync", async () => {
 
 Deno.test("[iterate] linesFromFile", async () => {
   const filename = getRelativePath(import.meta, "./mod.ts");
-  console.log(await Deno.readTextFile(filename));
   const lines = linesFromFile(filename);
   const file = (await toArray(lines)).join("\n");
 

@@ -8,6 +8,10 @@ const argsObj = {
   expected: '<a b="1" c="c" d="true" />',
 };
 
+Deno.test("[html] should accept arguments as object", () => {
+  assertEquals(argsObj.input, argsObj.expected);
+});
+
 const lineArgs = {
   input: html`
     <a
@@ -18,6 +22,10 @@ const lineArgs = {
   `,
   expected: '<a b="1" c="c" d="true" />',
 };
+
+Deno.test("[html] should accept arguments on different lines", () => {
+  assertEquals(lineArgs.input, lineArgs.expected);
+});
 
 const arr = {
   input: html`
@@ -35,12 +43,20 @@ const arr = {
     '<ul class="x"><li id="x-0">a</li><li id="x-1">b</li><li id="x-2">c</li></ul>',
 };
 
+Deno.test("[html] should accept array of html", () => {
+  assertEquals(arr.input, arr.expected);
+});
+
 const space = {
   input: html`
     <a   b="1"   c="d" />
   `,
   expected: '<a b="1" c="d" />',
 };
+
+Deno.test("[html] should remove spaces", () => {
+  assertEquals(space.input, space.expected);
+});
 
 const all = {
   input: html`
@@ -62,17 +78,5 @@ const all = {
 };
 
 Deno.test("[html]", () => {
-  assertEquals(argsObj.input, argsObj.expected);
-  assertEquals(lineArgs.input, lineArgs.expected);
-  assertEquals(arr.input, arr.expected);
-  assertEquals(space.input, space.expected);
   assertEquals(all.input, all.expected);
-});
-
-Deno.test("[html] should accept object as attributes", () => {
-  const input = html`
-    <div ${{ id: "id", class: "class" }} />
-  `;
-  const expected = `<div id="id" class="class" />`;
-  assertEquals(input, expected);
 });
