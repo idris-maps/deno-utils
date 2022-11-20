@@ -11,7 +11,7 @@ interface Config {
   height: number;
   yLabel?: string;
   background?: boolean;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const defaultConfig: Config = {
@@ -19,7 +19,7 @@ const defaultConfig: Config = {
   height: 200,
 };
 
-export default async (d: DsvData, area: boolean = false) => {
+export default (d: DsvData) => {
   const { isInvalid, sanitizeData } = checkLabelValues;
 
   if (isInvalid(d)) {

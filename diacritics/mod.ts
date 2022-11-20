@@ -850,6 +850,7 @@ const data: { [key: string]: string } = {
 
 export const replaceDiacritics = (str: string) =>
   str.replace(
+    // deno-lint-ignore no-control-regex
     /[^\u0000-\u007e]/g,
     (letter: string) => data[letter] || "_",
   );

@@ -36,6 +36,7 @@ export interface JSONSchema7Object {
 
 // Workaround for infinite type recursion
 // https://github.com/Microsoft/TypeScript/issues/3496#issuecomment-128553540
+// deno-lint-ignore no-empty-interface
 export interface JSONSchema7Array extends Array<JSONSchema7Type> {}
 
 /**

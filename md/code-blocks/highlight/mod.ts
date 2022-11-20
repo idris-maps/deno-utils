@@ -1,7 +1,7 @@
 import { getLangs, highlight } from "./deps.ts";
 import type { CodeBlockHandlers } from "./deps.ts";
 
-const handle = (lang: string) => async (content: string) =>
+const handle = (lang: string) => (content: string) =>
   [
     `<pre class="language-${lang}"><code lang="${lang}">`,
     highlight(content, lang),

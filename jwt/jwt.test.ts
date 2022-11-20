@@ -4,7 +4,7 @@ import jwt from "./jwt.ts";
 
 const secret = crypto.randomUUID();
 
-const getError = (func: () => any) => {
+const getError = (func: () => void) => {
   try {
     func();
     return false;

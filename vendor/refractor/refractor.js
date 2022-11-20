@@ -1,3 +1,6 @@
+// deno-fmt-ignore-file
+// deno-lint-ignore-file
+
 var sS = Object.create;
 var Pe = Object.defineProperty;
 var lS = Object.getOwnPropertyDescriptor;

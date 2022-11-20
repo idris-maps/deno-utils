@@ -17,7 +17,7 @@ const defaultConfig: Config = {
   background: false,
 };
 
-export default async (d: DsvData) => {
+export default (d: DsvData) => {
   const { isInvalid, sanitizeData } = checkLabelValue;
 
   if (isInvalid(d)) {

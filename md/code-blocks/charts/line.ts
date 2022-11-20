@@ -8,7 +8,7 @@ interface Config {
   color: string;
   temporal?: boolean;
   background?: boolean;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const defaultConfig: Config = {
@@ -17,7 +17,7 @@ const defaultConfig: Config = {
   color: "currentColor",
 };
 
-export default async (d: DsvData, area: boolean = false) => {
+export default async (d: DsvData, area = false) => {
   const { isInvalid, sanitizeData } = d.meta.temporal
     ? checkDateValue
     : checkLabelValue;

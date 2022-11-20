@@ -10,7 +10,7 @@ interface Config {
   width: number;
   height: number;
   background?: boolean;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const defaultConfig: Config = {
@@ -18,7 +18,7 @@ const defaultConfig: Config = {
   height: 200,
 };
 
-export default async (d: DsvData) => {
+export default (d: DsvData) => {
   const { isInvalid, sanitizeData } = checkXValueLabel;
 
   if (isInvalid(d)) {
@@ -49,5 +49,5 @@ export default async (d: DsvData) => {
 
   const spec = config.background ? baseSpec : { ...baseSpec, ...currentColor };
 
-  return await vegaliteToSvg(spec);
+  return vegaliteToSvg(spec);
 };

@@ -1,3 +1,4 @@
+// deno-lint-ignore-file ban-types
 import renderToString from "./katex.js";
 
 export interface TrustContext {

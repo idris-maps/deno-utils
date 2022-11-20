@@ -36,7 +36,7 @@ const createPage = async (md: string) => {
     music,
   ])(md);
 
-  let css: string[] = ["style.css"];
+  const css: string[] = ["style.css"];
   if (hasHighlight(res.langs)) css.push("prism.css");
   if (hasKatex(res.langs)) css.push("katex.css");
 

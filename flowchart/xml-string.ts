@@ -30,7 +30,7 @@ export class Element {
     return this;
   }
 
-  private innerText: string = "";
+  private innerText = "";
   public data(innerText: string): Element {
     this.innerText = innerText;
     return this;

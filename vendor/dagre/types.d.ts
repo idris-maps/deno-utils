@@ -3,7 +3,7 @@ export interface GraphOptions {
   multigraph?: boolean;
   compound?: boolean;
 }
-
+// deno-lint-ignore no-explicit-any
 export interface Graph<T = any> {
   graph: () => GraphLabel;
   isDirected: () => boolean;
@@ -49,7 +49,7 @@ export interface Graph<T = any> {
 }
 
 export interface Label {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 export type WeightFn = (edge: Edge) => number;
 export type EdgeFn = (outNodeName: string) => GraphEdge[];
@@ -101,10 +101,10 @@ export interface Edge {
 
 export interface GraphEdge {
   points: Array<{ x: number; y: number }>;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
-export type Node<T = {}> = T & {
+export type Node<T = Record<string, unknown>> = T & {
   x: number;
   y: number;
   width: number;

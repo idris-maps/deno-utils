@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import type { DsvData } from "../deps.ts";
 
 const isString = (d: any) => String(d) === d;

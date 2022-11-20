@@ -2,7 +2,7 @@ import { katex } from "./deps.ts";
 import type { CodeBlockHandlers } from "./deps.ts";
 
 const handlers: CodeBlockHandlers = {
-  "katex": async (content: string) =>
+  "katex": (content: string) =>
     katex(
       content,
       {

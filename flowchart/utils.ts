@@ -1,3 +1,5 @@
+import { isNumber, isRecord } from "../is/mod.ts";
+
 const pairsReducer = <T>(r: [T, T][], d: T, i: number, all: T[]): [T, T][] =>
   i % 2 === 1 ? [...r, [all[i - 1], d]] : r;
 
@@ -6,6 +8,7 @@ export const pairs = <T>(arr: T[]) => {
   return arr.reduce(pairsReducer, init);
 };
 
+// deno-lint-ignore no-explicit-any
 export const path = <T = any>(_path: string[], obj: any): T | undefined => {
   if (!obj) return undefined;
   const [first, ...rest] = _path;
@@ -15,9 +18,10 @@ export const path = <T = any>(_path: string[], obj: any): T | undefined => {
 
 export const uniq = <T>(arr: T[]) => Array.from(new Set(arr));
 
-export const has = (key: string, obj: object) => Object.keys(obj).includes(key);
+export const has = (key: string, obj: unknown) =>
+  isRecord(obj) && Object.keys(obj).includes(key);
 
-export const isNum = (d: any): d is number => d && !Number.isNaN(d);
+export const isNum = isNumber;
 
 export const flatten = <T>(arr: T[][]) =>
   arr.reduce((r, _arr) => {

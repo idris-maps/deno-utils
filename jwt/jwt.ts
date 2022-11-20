@@ -34,7 +34,7 @@ const check = <T>(secret: string, token: string): T => {
 
   try {
     return JSON.parse(new TextDecoder().decode(decode(payload)));
-  } catch (err) {
+  } catch {
     throw ERR.invalid;
   }
 };

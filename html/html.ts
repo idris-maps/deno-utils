@@ -1,3 +1,5 @@
+import { isRecord } from "../is/mod.ts";
+
 type Gen<T> = Generator<T, void, unknown>;
 
 const toChars = function* (html: string): Gen<string> {
@@ -57,10 +59,10 @@ const minify = (html: string) => {
   return result;
 };
 
-const stringifyArg = (d: any): string => {
+const stringifyArg = (d: unknown): string => {
   if (typeof d === "undefined" || String(d) === "null") return "";
   if (Array.isArray(d)) return d.map(stringifyArg).join("");
-  if (typeof d === "object") {
+  if (isRecord(d)) {
     return Object.entries(d)
       .map(([key, val]) => `${key}="${String(val)}"`)
       .join(" ");
@@ -68,7 +70,7 @@ const stringifyArg = (d: any): string => {
   return String(d);
 };
 
-const html = (str: TemplateStringsArray, ...args: any[]) =>
+const html = (str: TemplateStringsArray, ...args: unknown[]) =>
   str.reduce(
     (r: string, d: string, i: number) => r + minify(d) + stringifyArg(args[i]),
     "",

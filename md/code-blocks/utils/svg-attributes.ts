@@ -4,7 +4,7 @@ const parseAttrs = (attrs: string): SvgAttrs => {
   let isKey = true;
   let key = "";
   let value = "";
-  let res: SvgAttrs = [];
+  const res: SvgAttrs = [];
   const chars = Array.from(attrs.trim());
   chars.forEach((d, i) => {
     const next = chars[i + 1] || "";

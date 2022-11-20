@@ -10,6 +10,7 @@ import {
   subtractDays,
 } from "./dates.ts";
 
+// deno-lint-ignore no-explicit-any
 const isTrue = (expr: any, msg?: string) => assertEquals(expr, true, msg);
 
 const func = (d: Date) => d;
@@ -29,7 +30,7 @@ Deno.test("[dates] expose", () => {
   );
 
   try {
-    // @ts-ignore
+    // @ts-ignore ?
     expose(func)("not a date");
     isTrue(false, "should throw if date is invalid");
   } catch (err) {

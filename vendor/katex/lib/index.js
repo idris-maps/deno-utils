@@ -1,5 +1,5 @@
-// deno-lint-ignore-file
 // deno-fmt-ignore-file
+// deno-lint-ignore-file
 
 import { renderToString } from 'katex/dist/katex.js'
 

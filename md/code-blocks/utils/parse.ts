@@ -1,4 +1,5 @@
 import { parseCsv, parseYaml } from "../deps.ts";
+import { isRecord, isString } from "../../../is/mod.ts";
 
 const META_SEPARATOR = "---";
 
@@ -7,13 +8,6 @@ export interface DsvData {
   data: Record<string, string>[];
   meta: Record<string, unknown>;
 }
-
-const isRecord = (d: any): d is Record<string, unknown> =>
-  typeof d === "object" &&
-  !Array.isArray(d) &&
-  d !== null;
-
-const isString = (d: any): d is string => d && String(d) === d;
 
 const getMeta = (d: string): Record<string, unknown> => {
   try {
@@ -39,7 +33,7 @@ export const separateMeta = (
 
 const getDsvData = async (
   d: string,
-  separator: string = ",",
+  separator = ",",
 ): Promise<Record<string, string>[]> => {
   try {
     const json = await parseCsv(d, { skipFirstRow: true, separator });
@@ -54,7 +48,7 @@ const getDsvData = async (
   }
 };
 
-const getColumns = (d: string, separator: string = ",") => {
+const getColumns = (d: string, separator = ",") => {
   const firstRow = d.split("\n")[0];
   return firstRow.split(separator).map((d) => d.trim());
 };

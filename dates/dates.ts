@@ -1,3 +1,4 @@
+// deno-lint-ignore no-explicit-any
 const isValid = (date?: any): date is Date => {
   return date instanceof Date && !Number.isNaN(date.getTime());
 };
@@ -34,8 +35,6 @@ export const getNextWeekdayByIndex = (date: Date, jsIndex: number) => {
 
 const getPrevMonday = (date: Date) => getPrevWeekdayByIndex(date, 1);
 
-const getNextSunday = (date: Date) => getNextWeekdayByIndex(date, 0);
-
 export const getWeek = (date: Date) => {
   const monday = getPrevMonday(date);
   return Array.from(Array(7)).map((_, i) => addDays(monday, i));
@@ -64,13 +63,6 @@ const getLastDayOfPreviousMonth = (date: Date) =>
 
 const getFirstDayOfPreviousMonth = (date: Date) =>
   getFirstDayOfMonth(getLastDayOfPreviousMonth(date));
-
-const getFirstDayOfYear = (date: Date) => new Date(String(date.getFullYear()));
-
-const getLastDayOfYear = (date: Date) =>
-  new Date(`${date.getFullYear()}-12-31`);
-
-const isSunday = (date: Date) => date.getDay() === 0;
 
 interface DayInMonth {
   date: Date;

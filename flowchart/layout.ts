@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import { initGraph, layout } from "./deps.ts";
 import { flatten, getBbox, getLinePath, has, path } from "./utils.ts";
 
@@ -93,7 +94,7 @@ const DEFAULT_CONFIG = {
 };
 
 const getConfig = (config: LayoutConfig = {}) => {
-  let conf = DEFAULT_CONFIG;
+  const conf = DEFAULT_CONFIG;
 
   const rankdir = path(["rankdir"], config);
   if (["TB", "BT", "LR", "RL"].includes(rankdir)) {
@@ -163,7 +164,7 @@ export const createLayout = ({ config, nodes, edges }: LayoutProps) => {
 
   layout(graph);
 
-  let result: Layout = {
+  const result: Layout = {
     nodes: [],
     edges: [],
     bbox: [0, 0, 0, 0],

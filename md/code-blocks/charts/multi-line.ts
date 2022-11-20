@@ -13,7 +13,7 @@ interface Config {
   color: string;
   temporal?: boolean;
   background?: boolean;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const defaultConfig: Config = {
@@ -22,7 +22,7 @@ const defaultConfig: Config = {
   color: "steelblue",
 };
 
-export default async (d: DsvData) => {
+export default (d: DsvData) => {
   const { isInvalid, sanitizeData } = d.meta.temporal
     ? checkDateValueLabel
     : checkXValueLabel;
@@ -61,5 +61,5 @@ export default async (d: DsvData) => {
 
   const spec = config.background ? baseSpec : { ...baseSpec, ...currentColor };
 
-  return await vegaliteToSvg(spec);
+  return vegaliteToSvg(spec);
 };

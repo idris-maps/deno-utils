@@ -19,7 +19,7 @@ const defaultConfig: Config = {
   height: 200,
 };
 
-export default async (d: DsvData) => {
+export default (d: DsvData) => {
   const { isInvalid, sanitizeData } = checkLabelValue;
 
   if (isInvalid(d)) {
