@@ -1,4 +1,4 @@
-import serve from "../mod.ts";
+import { server } from "../mod.ts";
 import type { Endpoint } from "../mod.ts";
 import db from "./fake-db.ts";
 
@@ -36,7 +36,7 @@ const routes: Endpoint[] = [
     method: "GET",
     handler: (_, res) => res.redirect("/?name=redirected"),
   },
-  // the path to the file is relatîve to the start file (in this case "server.ts")
+  // the path to the file is relative to where the server is started
   {
     path: "/assets/*",
     method: "GET",
@@ -76,8 +76,9 @@ const routes: Endpoint[] = [
   },
 ];
 
-serve({
+server({
   routes,
   port: 3000,
   log: console.log, // optional. ignored if undefined
+  cors: { allowedOrigins: '*', allowedMethods: '*', preflight: true }, // optional
 });
