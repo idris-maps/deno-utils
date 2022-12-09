@@ -80,5 +80,5 @@ server({
   routes,
   port: 3000,
   log: console.log, // optional. ignored if undefined
-  cors: { allowedOrigins: '*', allowedMethods: '*', preflight: true }, // optional
+  cors: { allowedOrigins: "*", allowedMethods: "*", preflight: true }, // optional
 });
