@@ -9,14 +9,6 @@ const getQuery = (url: URL) => {
   return data;
 };
 
-const getHeaders = (request: Request) => {
-  const data: { [key: string]: string } = {};
-  request.headers.forEach((value, key) => {
-    data[key] = value;
-  });
-  return data;
-};
-
 const isFile = (d: FormDataEntryValue): d is File => String(d) !== d;
 
 interface ReqBody {
@@ -62,7 +54,7 @@ export default async (
   return {
     data,
     files,
-    headers: getHeaders(request),
+    headers: request.headers,
     method: request.method,
     params: {},
     query: getQuery(url),

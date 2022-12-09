@@ -143,7 +143,7 @@ const corsPreflightHandler = (corsConfig: CorsConfig, allowedMethods: string[]):
   (req, res) => {
     if (cors.isAllowedMethodAndOrigin(req.request, corsConfig)) {
       return res.status(204, {
-        mutateHeaders: h => cors.addHeaders(h, req.headers['origin'], allowedMethods) })
+        mutateHeaders: h => cors.addHeaders(h, req.headers.get('origin'), allowedMethods) })
     }
 
     return res.status(404);

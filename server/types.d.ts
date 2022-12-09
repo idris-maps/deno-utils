@@ -11,7 +11,7 @@ export interface Endpoint {
 export interface Req {
   data: Record<string, unknown>;
   files: File[];
-  headers: Record<string, string>;
+  headers: Headers;
   method: Method;
   params: Record<string, string>;
   query: Record<string, string>;
