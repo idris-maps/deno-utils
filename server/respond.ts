@@ -1,5 +1,6 @@
 import { serveFile } from "./deps.ts";
-import type { Logger } from "./types.d.ts";
+import { cors } from './cors.ts'
+import type { CorsConfig, Logger } from "./types.d.ts";
 
 type LogResponse = (type: string, d: Record<string, unknown>) => void;
 
@@ -8,10 +9,11 @@ interface ResponseOptions {
   status?: number;
 }
 
-const getHeaders = ({ contentType, redirectUrl, mutateHeaders }: {
+const getHeaders = ({ contentType, redirectUrl, mutateHeaders, addCorsHeaders }: {
   contentType?: string;
   redirectUrl?: string;
   mutateHeaders?: (headers: Headers) => void;
+  addCorsHeaders?: (headers: Headers) => void
 }) => {
   const headers = new Headers({
     ...(contentType ? { "Content-Type": contentType } : {}),
@@ -20,18 +22,23 @@ const getHeaders = ({ contentType, redirectUrl, mutateHeaders }: {
   if (mutateHeaders) {
     mutateHeaders(headers);
   }
+  if (addCorsHeaders) {
+    addCorsHeaders(headers);
+  }
   return headers;
 };
 
 type JSONResponse = (
   data?: unknown,
   options?: ResponseOptions,
+  addCorsHeaders?: (headers: Headers) => void
 ) => Response;
 
-const json = (log: LogResponse): JSONResponse => (data, options) => {
+const json = (log: LogResponse): JSONResponse => (data, options, addCorsHeaders) => {
   const headers = getHeaders({
     contentType: "application/json",
     mutateHeaders: options?.mutateHeaders,
+    addCorsHeaders,
   });
   log("json", { status, headers, data });
   return new Response(
@@ -77,12 +84,14 @@ const status = (log: LogResponse): StatusResponse => (code, options) =>
 type HTMLResponse = (
   htmlString: string,
   options?: ResponseOptions,
+  addCorsHeaders?: (headers: Headers) => void
 ) => Response;
 
-const html = (log: LogResponse): HTMLResponse => (htmlString, options) => {
+const html = (log: LogResponse): HTMLResponse => (htmlString, options, addCorsHeaders) => {
   const headers = getHeaders({
     contentType: "text/html",
     mutateHeaders: options?.mutateHeaders,
+    addCorsHeaders,
   });
 
   log("html", { status: 200 });
@@ -123,6 +132,7 @@ async (
     log("file", { status: 200, filePath, fileInfo });
     return serveFile(req, filePath);
   } catch {
+    log("file", { status: 404, filePath });
     return status(log)(404);
   }
 };
@@ -136,15 +146,24 @@ export interface Res {
 }
 
 interface Props {
+  corsConfig?: CorsConfig;
   logger?: Logger;
   req: Request;
   requestId: string;
 }
 
-const init = <T>({
+const initCorsHeaders = (req: Request, corsConfig?: CorsConfig) => (headers: Headers) => {
+  const origin = req.headers.get('origin');
+  if (origin && cors.isAllowedMethodAndOrigin(req, corsConfig)) {
+    cors.addHeaders(headers, origin, [req.method])
+  }
+}
+
+const init = ({
   logger,
   req,
   requestId,
+  corsConfig,
 }: Props): Res => {
   const log: LogResponse = (responseType, data) =>
     logger
@@ -157,12 +176,14 @@ const init = <T>({
       })
       : undefined;
 
+  const addCorsHeaders = initCorsHeaders(req, corsConfig);
+
   return {
     file: file(req, log),
     html: (htmlString: string, options?: ResponseOptions) =>
-      html(log)(htmlString, options),
+      html(log)(htmlString, options, addCorsHeaders),
     json: (data?: unknown, options?: ResponseOptions) =>
-      json(log)(data, options),
+      json(log)(data, options, addCorsHeaders),
     redirect: (url: string, options?: ResponseOptions) =>
       redirect(log)(url, options),
     status: (code: number, options?: StatusResponseOptions) =>

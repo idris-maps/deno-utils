@@ -1,4 +1,5 @@
-import type { Endpoint, Handler, Method, Router } from "./types.d.ts";
+import type { CorsConfig, Endpoint, Handler, Method, Router } from "./types.d.ts";
+import { cors } from './cors.ts'
 
 export interface RouteTree {
   [key: string]: RouteTree | Method[];
@@ -93,37 +94,62 @@ interface Match {
   path: string;
   method: string;
   params: { [key: string]: string };
+  allowedMethods?: string[];
 }
 
 const findMatch = (
   tree: RouteTree,
   path: string,
   method: Method,
+  corsConfig?: CorsConfig,
 ): Match | undefined => {
   const { methods, params, path: matchedPath } = matchPath(
     tree,
     splitPath(path),
   );
-  if (!matchedPath || !methods.includes(method)) {
+  if (!matchedPath) {
     return undefined;
   }
 
-  return {
-    path: `/${matchedPath.join("/")}`,
-    method,
-    params: Object.keys(params)
-      .reduce((r, key) => ({
-        ...r,
-        [key.slice(1)]: params[key],
-      }), {}),
-  };
+  if (methods.includes(method)) {
+    return {
+      path: `/${matchedPath.join("/")}`,
+      method,
+      params: Object.keys(params)
+        .reduce((r, key) => ({
+          ...r,
+          [key.slice(1)]: params[key],
+        }), {}),
+    };
+  }
+
+  if (corsConfig?.preflight && method === 'OPTIONS') {
+    return {
+      path,
+      method: 'OPTIONS',
+      params: {},
+      allowedMethods: methods.map(d => d.toUpperCase()),
+    }
+  }
+
+  return undefined;
 };
 
 const getMapKey = (
   { method, path }: { method: Method; path: string },
 ): string => `${method}____${path}`;
 
-export default <T>(endpoints: Endpoint[]): Router => {
+const corsPreflightHandler = (corsConfig: CorsConfig, allowedMethods: string[]): Handler =>
+  (req, res) => {
+    if (cors.isAllowedMethodAndOrigin(req.request, corsConfig)) {
+      return res.status(204, {
+        mutateHeaders: h => cors.addHeaders(h, req.headers['origin'], allowedMethods) })
+    }
+
+    return res.status(404);
+  }
+
+export default (endpoints: Endpoint[], corsConfig?: CorsConfig): Router => {
   const tree = createEndpointTree(endpoints);
   const map = new Map<string, Handler>();
   endpoints.map((d) => {
@@ -131,8 +157,12 @@ export default <T>(endpoints: Endpoint[]): Router => {
   });
 
   return (method: Method, path: string) => {
-    const match = findMatch(tree, path, method);
+    const match = findMatch(tree, path, method, corsConfig);
     if (!match) return undefined;
+
+    if (corsConfig && match.method === 'OPTIONS' && match.allowedMethods && match.allowedMethods.length) {
+      return { handler: corsPreflightHandler(corsConfig, match.allowedMethods), params: {} }
+    }
 
     const handler = map.get(getMapKey(match));
     if (!handler) return undefined;
