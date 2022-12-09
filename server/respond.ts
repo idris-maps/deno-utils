@@ -1,5 +1,5 @@
 import { serveFile } from "./deps.ts";
-import { cors } from './cors.ts'
+import { cors } from "./cors.ts";
 import type { CorsConfig, Logger } from "./types.d.ts";
 
 type LogResponse = (type: string, d: Record<string, unknown>) => void;
@@ -9,12 +9,14 @@ interface ResponseOptions {
   status?: number;
 }
 
-const getHeaders = ({ contentType, redirectUrl, mutateHeaders, addCorsHeaders }: {
-  contentType?: string;
-  redirectUrl?: string;
-  mutateHeaders?: (headers: Headers) => void;
-  addCorsHeaders?: (headers: Headers) => void
-}) => {
+const getHeaders = (
+  { contentType, redirectUrl, mutateHeaders, addCorsHeaders }: {
+    contentType?: string;
+    redirectUrl?: string;
+    mutateHeaders?: (headers: Headers) => void;
+    addCorsHeaders?: (headers: Headers) => void;
+  },
+) => {
   const headers = new Headers({
     ...(contentType ? { "Content-Type": contentType } : {}),
     ...(redirectUrl ? { "Location": redirectUrl } : {}),
@@ -31,24 +33,25 @@ const getHeaders = ({ contentType, redirectUrl, mutateHeaders, addCorsHeaders }:
 type JSONResponse = (
   data?: unknown,
   options?: ResponseOptions,
-  addCorsHeaders?: (headers: Headers) => void
+  addCorsHeaders?: (headers: Headers) => void,
 ) => Response;
 
-const json = (log: LogResponse): JSONResponse => (data, options, addCorsHeaders) => {
-  const headers = getHeaders({
-    contentType: "application/json",
-    mutateHeaders: options?.mutateHeaders,
-    addCorsHeaders,
-  });
-  log("json", { status, headers, data });
-  return new Response(
-    data ? JSON.stringify(data) : undefined,
-    {
-      status: options?.status || 200,
-      headers,
-    },
-  );
-};
+const json =
+  (log: LogResponse): JSONResponse => (data, options, addCorsHeaders) => {
+    const headers = getHeaders({
+      contentType: "application/json",
+      mutateHeaders: options?.mutateHeaders,
+      addCorsHeaders,
+    });
+    log("json", { status, headers, data });
+    return new Response(
+      data ? JSON.stringify(data) : undefined,
+      {
+        status: options?.status || 200,
+        headers,
+      },
+    );
+  };
 
 const defaultMessage: { [key: number]: string } = {
   400: "Bad Request",
@@ -84,23 +87,24 @@ const status = (log: LogResponse): StatusResponse => (code, options) =>
 type HTMLResponse = (
   htmlString: string,
   options?: ResponseOptions,
-  addCorsHeaders?: (headers: Headers) => void
+  addCorsHeaders?: (headers: Headers) => void,
 ) => Response;
 
-const html = (log: LogResponse): HTMLResponse => (htmlString, options, addCorsHeaders) => {
-  const headers = getHeaders({
-    contentType: "text/html",
-    mutateHeaders: options?.mutateHeaders,
-    addCorsHeaders,
-  });
+const html =
+  (log: LogResponse): HTMLResponse => (htmlString, options, addCorsHeaders) => {
+    const headers = getHeaders({
+      contentType: "text/html",
+      mutateHeaders: options?.mutateHeaders,
+      addCorsHeaders,
+    });
 
-  log("html", { status: 200 });
+    log("html", { status: 200 });
 
-  return new Response(
-    "<!DOCTYPE html>\n" + htmlString,
-    { status: 200, headers },
-  );
-};
+    return new Response(
+      "<!DOCTYPE html>\n" + htmlString,
+      { status: 200, headers },
+    );
+  };
 
 type RedirectResponse = (
   url: string,
@@ -152,12 +156,13 @@ interface Props {
   requestId: string;
 }
 
-const initCorsHeaders = (req: Request, corsConfig?: CorsConfig) => (headers: Headers) => {
-  const origin = req.headers.get('origin');
-  if (origin && cors.isAllowedMethodAndOrigin(req, corsConfig)) {
-    cors.addHeaders(headers, origin, [req.method])
-  }
-}
+const initCorsHeaders =
+  (req: Request, corsConfig?: CorsConfig) => (headers: Headers) => {
+    const origin = req.headers.get("origin");
+    if (origin && cors.isAllowedMethodAndOrigin(req, corsConfig)) {
+      cors.addHeaders(headers, origin, [req.method]);
+    }
+  };
 
 const init = ({
   logger,

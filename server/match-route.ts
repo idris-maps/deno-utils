@@ -1,5 +1,11 @@
-import type { CorsConfig, Endpoint, Handler, Method, Router } from "./types.d.ts";
-import { cors } from './cors.ts'
+import type {
+  CorsConfig,
+  Endpoint,
+  Handler,
+  Method,
+  Router,
+} from "./types.d.ts";
+import { cors } from "./cors.ts";
 
 export interface RouteTree {
   [key: string]: RouteTree | Method[];
@@ -123,13 +129,13 @@ const findMatch = (
     };
   }
 
-  if (corsConfig?.preflight && method === 'OPTIONS') {
+  if (corsConfig?.preflight && method === "OPTIONS") {
     return {
       path,
-      method: 'OPTIONS',
+      method: "OPTIONS",
       params: {},
-      allowedMethods: methods.map(d => d.toUpperCase()),
-    }
+      allowedMethods: methods.map((d) => d.toUpperCase()),
+    };
   }
 
   return undefined;
@@ -139,15 +145,17 @@ const getMapKey = (
   { method, path }: { method: Method; path: string },
 ): string => `${method}____${path}`;
 
-const corsPreflightHandler = (corsConfig: CorsConfig, allowedMethods: string[]): Handler =>
-  (req, res) => {
+const corsPreflightHandler =
+  (corsConfig: CorsConfig, allowedMethods: string[]): Handler => (req, res) => {
     if (cors.isAllowedMethodAndOrigin(req.request, corsConfig)) {
       return res.status(204, {
-        mutateHeaders: h => cors.addHeaders(h, req.headers.get('origin'), allowedMethods) })
+        mutateHeaders: (h) =>
+          cors.addHeaders(h, req.headers.get("origin"), allowedMethods),
+      });
     }
 
     return res.status(404);
-  }
+  };
 
 export default (endpoints: Endpoint[], corsConfig?: CorsConfig): Router => {
   const tree = createEndpointTree(endpoints);
@@ -160,8 +168,14 @@ export default (endpoints: Endpoint[], corsConfig?: CorsConfig): Router => {
     const match = findMatch(tree, path, method, corsConfig);
     if (!match) return undefined;
 
-    if (corsConfig && match.method === 'OPTIONS' && match.allowedMethods && match.allowedMethods.length) {
-      return { handler: corsPreflightHandler(corsConfig, match.allowedMethods), params: {} }
+    if (
+      corsConfig && match.method === "OPTIONS" && match.allowedMethods &&
+      match.allowedMethods.length
+    ) {
+      return {
+        handler: corsPreflightHandler(corsConfig, match.allowedMethods),
+        params: {},
+      };
     }
 
     const handler = map.get(getMapKey(match));
