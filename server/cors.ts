@@ -21,9 +21,11 @@ const isAllowedMethod = (request: Request, corsConfig?: CorsConfig) => {
 const isAllowedMethodAndOrigin = (request: Request, corsConfig?: CorsConfig) =>
   isAllowedMethod(request, corsConfig) && isAllowedOrigin(request, corsConfig);
 
-const addHeaders = (headers: Headers, origin: string, methods: string[]) => {
-  headers.append('Access-Control-Allow-Origin', origin);
-  headers.append('Access-Control-Allow-Methods', methods.join(', '));
+const addHeaders = (headers: Headers, origin?: string | null, methods: string[] = []) => {
+  if (origin && methods.length) {
+    headers.append('Access-Control-Allow-Origin', origin);
+    headers.append('Access-Control-Allow-Methods', methods.join(', '));
+  }
 }
 
 export type Config = CorsConfig;
