@@ -47,8 +47,15 @@ export interface LogContent extends Record<string, unknown> {
 
 export type Logger = (d: LogContent) => void;
 
+export interface CorsConfig {
+  allowedOrigins: '*' | string[]
+  allowedMethods: '*' | string[]
+  preflight?: boolean
+}
+
 export interface Config {
   port: number;
   routes: Endpoint[];
   log?: Logger;
+  cors?: CorsConfig;
 }

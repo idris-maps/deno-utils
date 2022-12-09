@@ -2,20 +2,22 @@ import { serve, ServeHandler } from "./deps.ts";
 import parseRequest from "./parse-request.ts";
 import initRes from "./respond.ts";
 import initRouter from "./match-route.ts";
-import type { Config, Endpoint, Logger, Router } from "./types.d.ts";
+import type { Config, CorsConfig, Endpoint, Logger, Router } from "./types.d.ts";
 
-export const requestHandler = <CookieContent>(
+export const requestHandler = (
   router: Router,
   log?: Logger,
+  corsConfig?: CorsConfig,
 ): ServeHandler =>
 async (request: Request): Promise<Response> => {
   const requestId = crypto.randomUUID();
   try {
     const req = await parseRequest(request, requestId);
-    const res = initRes<CookieContent>({
+    const res = initRes({
       req: request,
       requestId,
       logger: log,
+      corsConfig,
     });
 
     if (log) {
@@ -41,19 +43,20 @@ async (request: Request): Promise<Response> => {
   }
 };
 
-export const router = <CookieContent = undefined>(
+export const router = (
   routes: Endpoint[],
   log: Logger | undefined,
+  cors?: CorsConfig,
 ) => {
-  const router = initRouter(routes);
-  return requestHandler<CookieContent>(router, log);
+  const router = initRouter(routes, cors);
+  return requestHandler(router, log, cors);
 };
 
 export const server = (
-  { port, routes, log }: Config,
+  { port, routes, log, cors }: Config,
 ) => {
-  const router = initRouter(routes);
-  const handleRequest = requestHandler(router, log);
+  const router = initRouter(routes, cors);
+  const handleRequest = requestHandler(router, log, cors);
 
   console.log(`Started on port ${port}`);
   serve(handleRequest, { port });
