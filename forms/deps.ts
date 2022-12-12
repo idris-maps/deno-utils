@@ -4,13 +4,13 @@ export { default as html } from "../html/mod.ts";
 export { parse as parseYaml } from "https://deno.land/std@0.163.0/encoding/yaml.ts";
 export {
   is,
+  isArrayOfStrings,
   isBoolean,
+  isInteger,
   isNumber,
   isRecord,
   isString,
   isUndefined,
-  isInteger,
-  isArrayOfStrings,
 } from "../is/mod.ts";
 
 // sqlite

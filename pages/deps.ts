@@ -7,8 +7,8 @@ export { is, isRecord, isString } from "../is/mod.ts";
 export { linesFromFile } from "../iterable/mod.ts";
 export { renderPage } from "../md/render-page/mod.ts";
 export { default as md2html } from "../md/to-html/mod.ts";
-export { getLayoutConfig } from '../md/render-page/get-layout-config.ts'
-export type { LayoutConfig } from '../md/render-page/get-layout.ts'
+export { getLayoutConfig } from "../md/render-page/get-layout-config.ts";
+export type { LayoutConfig } from "../md/render-page/get-layout.ts";
 
 import { default as chart } from "../md/code-blocks/charts/mod.ts";
 import { default as flowchart } from "../md/code-blocks/flowchart/mod.ts";

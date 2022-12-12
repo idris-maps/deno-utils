@@ -29,8 +29,8 @@ export const initPageDb = async (
   const getPageLines = (path: string) =>
     linesFromFile(`${folder}${path.startsWith("/") ? path : "/" + path}.md`);
 
-  const getLayoutConfig = (path?: string) => readLayoutConfig(path)
-  
+  const getLayoutConfig = (path?: string) => readLayoutConfig(path);
+
   return {
     getRoute,
     getPageLines,

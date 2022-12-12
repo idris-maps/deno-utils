@@ -121,7 +121,9 @@ export const table = async ({ db }: Deps, content: string) => {
 
   const limit = isInteger(Number(data.limit)) ? Number(data.limit) : undefined;
 
-  const offset = isInteger(Number(data.offset)) ? Number(data.offset) : undefined;
+  const offset = isInteger(Number(data.offset))
+    ? Number(data.offset)
+    : undefined;
 
   const rows = await db.rows.list(
     form.name,

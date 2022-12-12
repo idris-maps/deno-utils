@@ -1,7 +1,7 @@
 import type { AnyIterable } from "./deps.ts";
 import type { LayoutConfig } from "./get-layout.ts";
 import type { ReplaceData } from "./replace-data.ts";
-import type { HandleCodeBlock } from '../code-blocks/mod.ts'
+import type { HandleCodeBlock } from "../code-blocks/mod.ts";
 import { map, pipe, toArray } from "./deps.ts";
 import { separateFrontmatter } from "./separate-frontmatter.ts";
 import { replaceData } from "./replace-data.ts";
@@ -14,8 +14,7 @@ import { getCodeblocksCss, getCodeblocksScripts } from "./get-lang-assets.ts";
 
 export const renderPage = (
   md2html: (d: string) => Promise<string>,
-  codeblockHandlers: Array<{ [key: string]: HandleCodeBlock }> =
-    [],
+  codeblockHandlers: Array<{ [key: string]: HandleCodeBlock }> = [],
   codeblockAssets: { [key: string]: { css?: string[]; scripts?: string[] } } =
     {},
   globalLayoutConfig: Partial<LayoutConfig> = {},

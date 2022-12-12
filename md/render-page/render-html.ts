@@ -1,6 +1,6 @@
 import type { Part } from "./separate-codeblocks.ts";
 import type { AnyIterable } from "./deps.ts";
-import type { CodeBlockHandlers } from '../code-blocks/mod.ts'
+import type { CodeBlockHandlers } from "../code-blocks/mod.ts";
 
 const noOp = (content: string, lang?: string) =>
   [

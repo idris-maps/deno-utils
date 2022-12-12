@@ -1,10 +1,24 @@
 import type { PageDb } from "../db/types.d.ts";
-import { codeblockHandlers, LayoutConfig, md2html, renderPage } from "../deps.ts";
+import {
+  codeblockHandlers,
+  LayoutConfig,
+  md2html,
+  renderPage,
+} from "../deps.ts";
 import { sendStatus } from "./send-status.ts";
-import type { Log } from './types.d.ts'
+import type { Log } from "./types.d.ts";
 
-export const initPageHandler = (db: PageDb, globalLayoutConfig: Partial<LayoutConfig>, log?: Log) => {
-  const getHtml = renderPage(md2html, codeblockHandlers, undefined, globalLayoutConfig);
+export const initPageHandler = (
+  db: PageDb,
+  globalLayoutConfig: Partial<LayoutConfig>,
+  log?: Log,
+) => {
+  const getHtml = renderPage(
+    md2html,
+    codeblockHandlers,
+    undefined,
+    globalLayoutConfig,
+  );
   return async (request: Request) => {
     const requestId = crypto.randomUUID();
     const { pathname, searchParams } = new URL(request.url);
