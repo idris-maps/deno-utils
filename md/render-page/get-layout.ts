@@ -44,7 +44,7 @@ const getHeadTags = (d: Partial<LayoutConfig>) => [
   })),
   ...(d.css || []).map((href) => ({
     tag: "link",
-    props: { rel: "styleshee", href },
+    props: { rel: "stylesheet", href },
   })),
   ...(d.scripts || []).map((src) => ({
     tag: "script",
@@ -64,7 +64,9 @@ export const getLayout = (
     renderHead(getHeadTags(config)),
     "</head>",
     "<body>",
+    "<main>",
     content,
+    "</main>",
     "</body>",
     "</html>",
   ].join("\n");

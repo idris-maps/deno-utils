@@ -9,6 +9,8 @@ export {
   isRecord,
   isString,
   isUndefined,
+  isInteger,
+  isArrayOfStrings,
 } from "../is/mod.ts";
 
 // sqlite

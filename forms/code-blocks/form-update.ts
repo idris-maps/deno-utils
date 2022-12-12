@@ -1,7 +1,7 @@
 import { parseYaml } from "../deps.ts";
 import formHtml from "../html/form.ts";
 import { Deps } from "./mod.ts";
-import { isRecord, isString } from "../utils.ts";
+import { isRecord, isString } from "../deps.ts";
 import { sanitizeValue } from "../sanitize/mod.ts";
 import { Field } from "../types.ts";
 
