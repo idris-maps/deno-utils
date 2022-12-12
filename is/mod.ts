@@ -13,6 +13,10 @@ export const isNumber = is<number>((d) =>
   typeof d === "number" && !Number.isNaN(d)
 );
 
+export const isInteger = is<number>((d) => 
+  isNumber(d) && Number.isInteger(d)
+)
+
 // records
 
 export const isRecord = is<Record<string, unknown>>((d) =>

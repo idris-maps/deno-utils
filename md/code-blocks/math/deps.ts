@@ -1,2 +1,2 @@
-export { default as katex } from "../../../vendor/katex/mod.ts";
+export { default as mathup } from "../../../vendor/mathup/mod.ts";
 export type { CodeBlockHandlers } from "../mod.ts";

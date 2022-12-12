@@ -1,0 +1,33 @@
+.code .svg-btns {
+  width: 100%;
+  text-align: right;
+}
+
+.code .svg-btns button,
+.fullscreen-svg-btns button {
+  margin-left: 0.5em;
+  font-size: 1.2em;
+}
+
+.fullscreen-svg {
+  display: block;
+  position: fixed;
+  z-index: 10;
+  left: 0px;
+  top: 0px;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  background-color: var(--bg-color);
+  opacity: 0.975;
+}
+
+.fullscreen-svg .fullscreen-svg-btns {
+  padding: 0.5em;
+  text-align: right;
+}
+
+.fullscreen-svg .fullscreen-svg-container {
+  width: 100%;
+}
+

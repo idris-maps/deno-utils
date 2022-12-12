@@ -6,7 +6,7 @@ import {
   isNumericField,
   Sort,
 } from "../types.ts";
-import { isArrayOfStrings, isInt, isString } from "../utils.ts";
+import { isArrayOfStrings, isInteger, isString } from "../deps.ts";
 import { Deps } from "./mod.ts";
 import { parseYaml } from "../deps.ts";
 import tableHtml from "../html/table.ts";
@@ -119,9 +119,9 @@ export const table = async ({ db }: Deps, content: string) => {
     ? parseSort(formColumns, data.sort)
     : undefined;
 
-  const limit = isInt(Number(data.limit)) ? Number(data.limit) : undefined;
+  const limit = isInteger(Number(data.limit)) ? Number(data.limit) : undefined;
 
-  const offset = isInt(Number(data.offset)) ? Number(data.offset) : undefined;
+  const offset = isInteger(Number(data.offset)) ? Number(data.offset) : undefined;
 
   const rows = await db.rows.list(
     form.name,

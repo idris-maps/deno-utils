@@ -2,7 +2,13 @@ import { serve, ServeHandler } from "./deps.ts";
 import parseRequest from "./parse-request.ts";
 import initRes from "./respond.ts";
 import initRouter from "./match-route.ts";
-import type { Config, CorsConfig, Endpoint, Logger, Router } from "./types.d.ts";
+import type {
+  Config,
+  CorsConfig,
+  Endpoint,
+  Logger,
+  Router,
+} from "./types.d.ts";
 
 export const requestHandler = (
   router: Router,
