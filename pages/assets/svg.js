@@ -21,7 +21,7 @@ const closeIcon = '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6
 const appendButton = (parent, inner, label, onClick) => {
   const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   Object.entries(iconAttrs).forEach(([k, v]) => { icon.setAttribute(k, String(v)) })
-  icon.innerHTML = inner;
+  icon.innerHTML = inner
   const button = document.createElement('button')
   button.setAttribute('title', label)
   button.addEventListener('click', onClick)
@@ -57,7 +57,7 @@ const goFullscreen = svg => {
 
 /** @type {(svg: SVGElement, lang: string = 'image') => void} */
 const downloadSvg = (svg, lang) => {
-  const a = document.createElement('a');
+  const a = document.createElement('a')
   a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(svg.outerHTML))
   a.setAttribute('download', lang + '.svg')
   a.style.display = 'none'
