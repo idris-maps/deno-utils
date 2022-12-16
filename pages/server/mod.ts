@@ -1,23 +1,33 @@
-import { serve } from "../deps.ts";
+import { FormsDb, serve } from "../deps.ts";
 import { initAssetsHandler } from "./assets-router.ts";
 import { initPageHandler } from "./page-router.ts";
+import { initApiRouter } from './api-router.ts'
 import { Log } from "./types.d.ts";
 import { PageDb } from "../db/types.d.ts";
 
 interface Props {
-  assetsFolder?: string;
+  apiPath?: string; // default "/api"
+  assetsFolder?: string; // default "assets"
+  formsDb: FormsDb;
   layoutConfig?: string;
   log?: Log;
   pageDb: PageDb;
-  port?: number;
+  port?: number; // default 3333
 }
 
 export const startServer = async (
-  { assetsFolder, layoutConfig, log, pageDb, port }: Props,
+  { apiPath, assetsFolder, formsDb, layoutConfig, log, pageDb, port }: Props,
 ) => {
+
+  const apiPrefix = apiPath
+    ? apiPath.startsWith('/') ? apiPath : `/${apiPath}`
+    : '/api'
+
+  const apiHandler = initApiRouter({ apiPath: apiPrefix, formsDb, log });
   const assetsHandler = initAssetsHandler(log);
   const pageHandler = initPageHandler(
     pageDb,
+    formsDb,
     await pageDb.getLayoutConfig(layoutConfig),
     log,
   );
@@ -29,10 +39,12 @@ export const startServer = async (
       return assetsHandler(request);
     }
 
+    if (pathname.startsWith(apiPrefix)) {
+      return apiHandler(request);
+    }
+
     return pageHandler(request);
   };
 
   serve(handler, { port: port || 3333 });
-
-  console.log(`Server started on port ${port || 3333}`);
 };
