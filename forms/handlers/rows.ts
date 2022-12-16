@@ -17,17 +17,18 @@ const getFields = async (
   return form ? form.fields : undefined;
 };
 
-export const postRow: Handler = async ({ db, params, data, log }) => {
+export const postRow: Handler = async ({ db, query, params, data, log }) => {
   const fields = await getFields(db, params, log);
   if (!fields) return { status: 404 };
 
+  const redirect = query.redirect && query.redirect !== '' ? query.redirect : undefined;
   const values = sanitizeValues(fields)(data);
 
   if (isValues(fields)(values)) {
     const res = await db.rows.insert(params.formName, values, log);
 
     if (res.inserted) {
-      return { status: 200, body: res.row };
+      return redirect ? { status: 302, body: redirect } : { status: 200, body: res.row };
     }
   }
 };
@@ -61,7 +62,7 @@ export const getRow: Handler = async ({ db, params, log }) => {
   return row ? { status: 200, body: row } : { status: 404 };
 };
 
-export const putRow: Handler = async ({ db, params, data, log }) => {
+export const putRow: Handler = async ({ db, params, query, data, log }) => {
   if (!params.rowId) {
     throw new Error('"params.rowId" is undefined');
   }
@@ -72,6 +73,7 @@ export const putRow: Handler = async ({ db, params, data, log }) => {
   const row = await db.rows.get(params.formName, params.rowId, log);
   if (!row) return { status: 404 };
 
+  const redirect = query.redirect && query.redirect !== '' ? query.redirect : undefined;
   const values = sanitizeValues(fields)({ ...row, ...data });
 
   if (isValues(fields)(values)) {
@@ -83,7 +85,7 @@ export const putRow: Handler = async ({ db, params, data, log }) => {
     );
 
     if (res.updated) {
-      return { status: 200, body: res.data };
+      return redirect ? { status: 302, body: redirect } : { status: 200, body: res.data };
     }
   }
 };
