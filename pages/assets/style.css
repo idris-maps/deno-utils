@@ -137,6 +137,35 @@ button:hover {
   cursor: pointer;
 }
 
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+tr:hover {
+  color: var(--primary-contrast-color);
+  background-color: var(--primary-color);
+}
+
+tr:hover th, th {
+  color: var(--bg-color);
+  background-color: var(--color);
+}
+
+th, td {
+  border: 1px solid var(--color-light);
+  padding: .5rem;
+  text-align: left;
+}
+
+th {
+  text-align: center;
+}
+
+td {
+  font-family: var(--monospace);
+}
+
 /** form **/
 form {
   display: block;
