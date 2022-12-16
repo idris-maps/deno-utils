@@ -1,11 +1,11 @@
 import type { PageDb } from "../db/types.d.ts";
 import {
   codeblockHandlers,
+  FormsDb,
+  getFormCodeblocks,
   LayoutConfig,
   md2html,
   renderPage,
-  FormsDb,
-  getFormCodeblocks,
 } from "../deps.ts";
 import { sendStatus } from "./send-status.ts";
 import type { Log } from "./types.d.ts";
@@ -16,7 +16,9 @@ export const initPageHandler = (
   globalLayoutConfig: Partial<LayoutConfig>,
   logger?: Log,
 ) => {
-  codeblockHandlers.push(getFormCodeblocks({ db: formsDB, formBaseUrl: '/api/forms' }));
+  codeblockHandlers.push(
+    getFormCodeblocks({ db: formsDB, formBaseUrl: "/api/forms" }),
+  );
   const getHtml = renderPage(
     md2html,
     codeblockHandlers,
@@ -26,11 +28,15 @@ export const initPageHandler = (
 
   return async (request: Request) => {
     const requestId = crypto.randomUUID();
-    const log = (level: 'info' | 'error', event: string, d: Record<string,unknown> = {}) => {
+    const log = (
+      level: "info" | "error",
+      event: string,
+      d: Record<string, unknown> = {},
+    ) => {
       if (logger) {
-        logger({ ...d, level, event, requestId, type: 'form-request' })
+        logger({ ...d, level, event, requestId, type: "form-request" });
       }
-    }
+    };
     const { pathname, searchParams } = new URL(request.url);
     const query: Record<string, string> = {};
     for (const key of searchParams.keys()) {
@@ -38,35 +44,35 @@ export const initPageHandler = (
       if (value) query[key] = value;
     }
 
-    log('info', 'request', { pathname, query });
+    log("info", "request", { pathname, query });
 
     try {
       const route = await pageDb.getRoute(pathname);
       if (!route) {
-        log('info', 'response', { route, status: 404 });
+        log("info", "response", { route, status: 404 });
         return sendStatus(404);
       }
 
       const { path, params } = route;
       const html = await getHtml(pageDb.getPageLines(path), { params, query });
 
-      log('info', 'response', { 
+      log("info", "response", {
         path,
         params,
         route,
         status: 200,
-       })
+      });
 
       return new Response(html, {
         status: 200,
         headers: { "Content-Type": "text/html" },
       });
     } catch (err) {
-      log('error', 'failed to get page', {
+      log("error", "failed to get page", {
         errorMessage: err.message,
         error: err,
         status: 500,
-      })
+      });
 
       return sendStatus(500);
     }

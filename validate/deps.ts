@@ -1,1 +1,1 @@
-export { is, isBoolean, isNumber, isString, isRecord } from '../is/mod.ts'
+export { is, isBoolean, isNumber, isRecord, isString } from "../is/mod.ts";

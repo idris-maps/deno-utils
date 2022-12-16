@@ -22,7 +22,7 @@ export const form = async ({ db, formBaseUrl }: Deps, content: string) => {
   }
 
   let action = formBaseUrl + "/" + _form.name;
-  if (isString(data.redirect)) { action = action + `?redirect=${data.redirect}` }
+  if (isString(data.redirect)) action = action + `?redirect=${data.redirect}`;
 
   return formHtml({
     action,

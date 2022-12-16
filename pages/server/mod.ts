@@ -1,7 +1,7 @@
 import { FormsDb, serve } from "../deps.ts";
 import { initAssetsHandler } from "./assets-router.ts";
 import { initPageHandler } from "./page-router.ts";
-import { initApiRouter } from './api-router.ts'
+import { initApiRouter } from "./api-router.ts";
 import { Log } from "./types.d.ts";
 import { PageDb } from "../db/types.d.ts";
 
@@ -18,10 +18,9 @@ interface Props {
 export const startServer = async (
   { apiPath, assetsFolder, formsDb, layoutConfig, log, pageDb, port }: Props,
 ) => {
-
   const apiPrefix = apiPath
-    ? apiPath.startsWith('/') ? apiPath : `/${apiPath}`
-    : '/api'
+    ? apiPath.startsWith("/") ? apiPath : `/${apiPath}`
+    : "/api";
 
   const apiHandler = initApiRouter({ apiPath: apiPrefix, formsDb, log });
   const assetsHandler = initAssetsHandler(log);
