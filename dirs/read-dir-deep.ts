@@ -27,9 +27,8 @@ const normalizePath = (path: string) => {
   return parts.join("/");
 };
 
-const readDirDeep = async (path = ".") => {
+export const readDirDeep = async (path = ".") => {
   const { files } = await readDir(path);
   return files.map(normalizePath);
 };
 
-export default readDirDeep;
