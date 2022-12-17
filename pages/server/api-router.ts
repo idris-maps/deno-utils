@@ -1,12 +1,12 @@
-import { initFormHandlers, router } from "../deps.ts";
+import { FormHandlers, router } from "../deps.ts";
 import { sendStatus } from "./send-status.ts";
-import type { Endpoint, FormsDb, Handler } from "../deps.ts";
+import type { Endpoint, Handler } from "../deps.ts";
 import type { Log } from "./types.d.ts";
 import { isString } from "https://deno.land/std@0.138.0/encoding/_yaml/utils.ts";
 
 interface Props {
-  formsDb: FormsDb;
   apiPath: string;
+  h: FormHandlers;
   log?: Log;
 }
 
@@ -70,9 +70,8 @@ const toEndPoint = (
 };
 
 export const initApiRouter = (
-  { formsDb, apiPath, log }: Props,
+  { apiPath, h, log }: Props,
 ) => {
-  const h = initFormHandlers(formsDb);
   const logger = (requestId: string) => (d: FormLog) => {
     if (log) {
       log({ ...d, requestId, event: d.message, type: "form-request" });

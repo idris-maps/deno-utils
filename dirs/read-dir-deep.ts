@@ -31,4 +31,3 @@ export const readDirDeep = async (path = ".") => {
   const { files } = await readDir(path);
   return files.map(normalizePath);
 };
-

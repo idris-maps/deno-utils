@@ -1,11 +1,13 @@
-import { FormsDb, serve } from "../deps.ts";
+import { FormsDb, initFormHandlers, serve } from "../deps.ts";
 import { initAssetsHandler } from "./assets-router.ts";
 import { initPageHandler } from "./page-router.ts";
 import { initApiRouter } from "./api-router.ts";
 import { Log } from "./types.d.ts";
 import { PageDb } from "../db/types.d.ts";
+import { initAdminRouter } from "./admin-router.ts";
 
 interface Props {
+  adminPath?: string; // default "admin"
   apiPath?: string; // default "/api"
   assetsFolder?: string; // default "assets"
   formsDb: FormsDb;
@@ -16,13 +18,36 @@ interface Props {
 }
 
 export const startServer = async (
-  { apiPath, assetsFolder, formsDb, layoutConfig, log, pageDb, port }: Props,
+  {
+    adminPath,
+    apiPath,
+    assetsFolder,
+    formsDb,
+    layoutConfig,
+    log,
+    pageDb,
+    port,
+  }: Props,
 ) => {
   const apiPrefix = apiPath
     ? apiPath.startsWith("/") ? apiPath : `/${apiPath}`
     : "/api";
+  const adminPrefix = adminPath
+    ? adminPath.startsWith("/") ? adminPath : `${adminPath}`
+    : "/admin";
 
-  const apiHandler = initApiRouter({ apiPath: apiPrefix, formsDb, log });
+  const formHandlers = initFormHandlers(formsDb);
+  const adminHandler = initAdminRouter({
+    adminPath: adminPrefix,
+    formsDb,
+    pageDb,
+    h: formHandlers,
+  });
+  const apiHandler = initApiRouter({
+    apiPath: apiPrefix,
+    h: formHandlers,
+    log,
+  });
   const assetsHandler = initAssetsHandler(log);
   const pageHandler = initPageHandler(
     pageDb,
@@ -36,6 +61,10 @@ export const startServer = async (
 
     if (pathname.startsWith(`/${assetsFolder || "assets"}`)) {
       return assetsHandler(request);
+    }
+
+    if (pathname.startsWith(adminPrefix)) {
+      return adminHandler(request);
     }
 
     if (pathname.startsWith(apiPrefix)) {
