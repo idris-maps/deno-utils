@@ -6,7 +6,7 @@ export const listForms = (
   dbFilename: string,
   log: Logger,
 ): Promise<FormDefinition[]> => {
-  return run(dbFilename, async ({ query }) => {
+  return run(dbFilename, log, async ({ query }) => {
     log({
       level: "info",
       message: "List forms",

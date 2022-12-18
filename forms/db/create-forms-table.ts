@@ -2,7 +2,7 @@ import { run } from "./run.ts";
 import type { Logger } from "./types.ts";
 
 export const createFormsTable = (dbFilename: string, log: Logger) => {
-  return run(dbFilename, async ({ exec, query }) => {
+  return run(dbFilename, log, async ({ exec, query }) => {
     log({
       level: "info",
       message: "Start creating __forms table",

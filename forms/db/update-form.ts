@@ -11,7 +11,7 @@ export const updateForm = (
 ): Promise<
   { updated: true; form: FormDefinition } | { updated: false; message: string }
 > => {
-  return run(dbFilename, async ({ db, exec, query }) => {
+  return run(dbFilename, log, async ({ db, exec, query }) => {
     log({
       level: "info",
       message: `Updating form ${name}`,

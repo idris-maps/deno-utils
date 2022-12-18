@@ -11,7 +11,7 @@ export const insertRow = <T extends Record<string, unknown>>(
 ): Promise<
   { inserted: false } | { inserted: true; row: T & { __id: string } }
 > =>
-  run(dbFilename, async ({ db }) => {
+  run(dbFilename, log, async ({ db }) => {
     log({
       level: "info",
       message: `Inserting row to "${form.name}"`,
