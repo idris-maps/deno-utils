@@ -1,5 +1,5 @@
 import { PageDb } from "../db/types.d.ts";
-import { Endpoint, FormHandlers, FormsDb, router } from "../deps.ts";
+import { Endpoint, FormHandlers, FormsDb, LayoutConfig, router } from "../deps.ts";
 import {
   addRowPage,
   adminPage,
@@ -13,9 +13,10 @@ interface Props {
   formsDb: FormsDb;
   pageDb: PageDb;
   h: FormHandlers;
+  layoutConfig: Partial<LayoutConfig>
 }
 
-const getEndpoints = ({ adminPath, formsDb, pageDb, h }: Props): Endpoint[] => [
+const getEndpoints = ({ adminPath, formsDb, pageDb, h, layoutConfig }: Props): Endpoint[] => [
   {
     path: `${adminPath}`,
     method: "GET",
@@ -26,6 +27,7 @@ const getEndpoints = ({ adminPath, formsDb, pageDb, h }: Props): Endpoint[] => [
           formsDb,
           pageDb,
           pagesFolder: pageDb.folder,
+          layoutConfig,
         }),
       ),
   },
@@ -38,6 +40,7 @@ const getEndpoints = ({ adminPath, formsDb, pageDb, h }: Props): Endpoint[] => [
           formsBaseUrl: `${adminPath}/forms`,
           formsDb,
           formName: req.params.formName,
+          layoutConfig,
         }),
       ),
   },
@@ -50,6 +53,7 @@ const getEndpoints = ({ adminPath, formsDb, pageDb, h }: Props): Endpoint[] => [
           formsBaseUrl: `${adminPath}/forms`,
           formsDb,
           formName: req.params.formName,
+          layoutConfig,
         }),
       ),
   },
@@ -63,6 +67,7 @@ const getEndpoints = ({ adminPath, formsDb, pageDb, h }: Props): Endpoint[] => [
           formsDb,
           formName: req.params.formName,
           rowId: req.params.rowId,
+          layoutConfig,
         }),
       ),
   },
@@ -74,7 +79,7 @@ const getEndpoints = ({ adminPath, formsDb, pageDb, h }: Props): Endpoint[] => [
       if (status === 200) {
         return res.redirect(`${adminPath}/forms/${req.params.formName}`);
       }
-      return res.html(errorPage(body));
+      return res.html(errorPage(layoutConfig, body));
     },
   },
   {
@@ -85,7 +90,7 @@ const getEndpoints = ({ adminPath, formsDb, pageDb, h }: Props): Endpoint[] => [
       if (status === 200) {
         return res.redirect(`${adminPath}/forms/${req.params.formName}`);
       }
-      return res.html(errorPage(body));
+      return res.html(errorPage(layoutConfig, body));
     },
   },
   {
@@ -96,7 +101,7 @@ const getEndpoints = ({ adminPath, formsDb, pageDb, h }: Props): Endpoint[] => [
       if (status === 204) {
         return res.redirect(`${adminPath}/forms/${req.params.formName}`);
       }
-      return res.html(errorPage(body));
+      return res.html(errorPage(layoutConfig, body));
     },
   },
 ];

@@ -1,4 +1,4 @@
-import { FormsDb, html, tableHtml } from "../deps.ts";
+import { FormsDb, html, tableHtml, LayoutConfig } from "../deps.ts";
 import { pageLayout } from "./page-layout.ts";
 import { page404 } from "./404-page.ts";
 
@@ -6,12 +6,13 @@ interface Props {
   formsDb: FormsDb;
   formsBaseUrl: string;
   formName: string;
+  layoutConfig: Partial<LayoutConfig>
 }
 
-export const formPage = async ({ formsBaseUrl, formsDb, formName }: Props) => {
+export const formPage = async ({ formsBaseUrl, formsDb, formName, layoutConfig }: Props) => {
   const def = await formsDb.forms.get(formName);
 
-  if (!def) return page404;
+  if (!def) return page404(layoutConfig);
 
   const data = (await formsDb.rows.list(formName)) || [];
 
@@ -38,5 +39,5 @@ export const formPage = async ({ formsBaseUrl, formsDb, formName }: Props) => {
     </header>
   `;
 
-  return pageLayout(title, page, "form-page");
+  return pageLayout(layoutConfig, title, page, "form-page");
 };

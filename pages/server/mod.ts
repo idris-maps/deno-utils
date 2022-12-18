@@ -23,7 +23,7 @@ export const startServer = async (
     apiPath,
     assetsFolder,
     formsDb,
-    layoutConfig,
+    layoutConfig: layoutPath,
     log,
     pageDb,
     port,
@@ -36,12 +36,15 @@ export const startServer = async (
     ? adminPath.startsWith("/") ? adminPath : `${adminPath}`
     : "/admin";
 
+  const layoutConfig = await pageDb.getLayoutConfig(layoutPath)
+  
   const formHandlers = initFormHandlers(formsDb);
   const adminHandler = initAdminRouter({
     adminPath: adminPrefix,
     formsDb,
     pageDb,
     h: formHandlers,
+    layoutConfig,
   });
   const apiHandler = initApiRouter({
     apiPath: apiPrefix,
@@ -52,7 +55,7 @@ export const startServer = async (
   const pageHandler = initPageHandler(
     pageDb,
     formsDb,
-    await pageDb.getLayoutConfig(layoutConfig),
+    layoutConfig,
     log,
   );
 

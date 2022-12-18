@@ -17,7 +17,8 @@ export type { FormDefinition } from "../forms/types.ts";
 export { renderPage } from "../md/render-page/mod.ts";
 export { default as md2html } from "../md/to-html/mod.ts";
 export { getLayoutConfig } from "../md/render-page/get-layout-config.ts";
-export type { LayoutConfig } from "../md/render-page/get-layout.ts";
+export type { LayoutConfig } from "../md/render-page/types.d.ts";
+export { getHead } from '../md/render-page/mod.ts'
 export { default as html } from "../html/mod.ts";
 
 import { default as chart } from "../md/code-blocks/charts/mod.ts";

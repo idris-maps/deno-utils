@@ -1,6 +1,7 @@
-import { html } from "../deps.ts";
+import { html, LayoutConfig, getHead } from "../deps.ts";
 
 export const pageLayout = (
+  layoutConfig: Partial<LayoutConfig> = {},
   title: string,
   content: string,
   bodyClass?: string,
@@ -8,9 +9,7 @@ export const pageLayout = (
   html`
     <html>
       <head>
-        <meta charset="utf-8" />
-        <meta viewport="width=device-width, initial-scale=1.0" />
-        <title>${title}</title>
+        ${getHead({ ...layoutConfig, title })}
       </head>
       <body ${bodyClass ? `class="${bodyClass}"` : ""} >
         ${content}

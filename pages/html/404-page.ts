@@ -1,7 +1,8 @@
-import { html } from "../deps.ts";
-import { pageLayout } from "./page-layout.ts";
+import { html, LayoutConfig } from "../deps.ts";
+import { pageLayout, } from "./page-layout.ts";
 
-export const page404 = pageLayout(
+export const page404 = (layoutConfig: Partial<LayoutConfig>) => pageLayout(
+  layoutConfig,
   "404",
   html`
     <main>

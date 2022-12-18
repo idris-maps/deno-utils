@@ -1,5 +1,5 @@
 import { PageDb } from "../db/types.d.ts";
-import { FormsDb, html } from "../deps.ts";
+import { FormsDb, html, LayoutConfig } from "../deps.ts";
 import { fileTree } from "./file-tree.ts";
 import { formList } from "./form-list.ts";
 import { pageLayout } from "./page-layout.ts";
@@ -9,12 +9,14 @@ interface Props {
   pageDb: PageDb;
   formsBaseUrl: string;
   pagesFolder: string;
+  layoutConfig: Partial<LayoutConfig>
 }
 
 export const adminPage = async (
-  { formsDb, pageDb, formsBaseUrl, pagesFolder }: Props,
+  { formsDb, pageDb, formsBaseUrl, pagesFolder, layoutConfig }: Props,
 ) =>
   pageLayout(
+    layoutConfig,
     "Admin",
     html`
     <main>
