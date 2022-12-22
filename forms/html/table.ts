@@ -31,7 +31,7 @@ const Row = ({ fields, data, edit, baseUrl }: RowProps) =>
       ${
     (edit && baseUrl)
       ? html`
-            <td>
+            <td class="table-edit-button">
               <a href="${baseUrl}/${data.__id}" title="edit row">${editIcon}</a>
             </td>
           `

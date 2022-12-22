@@ -33,10 +33,10 @@ export const formPage = async ({ formsBaseUrl, formsDb, formName, layoutConfig }
       <a href="${baseUrl}/add">
         <button>Add entry</button>
       </a>
-      <div class="form-page-table">
-        ${table}
-      </div>
     </header>
+    <div class="form-page-table">
+      ${table}
+    </div>
   `;
 
   return pageLayout(layoutConfig, title, page, "form-page");
