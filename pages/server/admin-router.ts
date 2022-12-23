@@ -1,5 +1,11 @@
 import { PageDb } from "../db/types.d.ts";
-import { Endpoint, FormHandlers, FormsDb, LayoutConfig, router } from "../deps.ts";
+import {
+  Endpoint,
+  FormHandlers,
+  FormsDb,
+  LayoutConfig,
+  router,
+} from "../deps.ts";
 import {
   addRowPage,
   adminPage,
@@ -13,10 +19,12 @@ interface Props {
   formsDb: FormsDb;
   pageDb: PageDb;
   h: FormHandlers;
-  layoutConfig: Partial<LayoutConfig>
+  layoutConfig: Partial<LayoutConfig>;
 }
 
-const getEndpoints = ({ adminPath, formsDb, pageDb, h, layoutConfig }: Props): Endpoint[] => [
+const getEndpoints = (
+  { adminPath, formsDb, pageDb, h, layoutConfig }: Props,
+): Endpoint[] => [
   {
     path: `${adminPath}`,
     method: "GET",

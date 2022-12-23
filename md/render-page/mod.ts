@@ -12,8 +12,8 @@ import { getLayout } from "./get-layout.ts";
 import { parseFrontmatter } from "./parse-frontmatter.ts";
 import { getCodeblocksCss, getCodeblocksScripts } from "./get-lang-assets.ts";
 
-export * from './get-head.ts'
-export * from './types.d.ts'
+export * from "./get-head.ts";
+export * from "./types.d.ts";
 
 export const renderPage = (
   md2html: (d: string) => Promise<string>,

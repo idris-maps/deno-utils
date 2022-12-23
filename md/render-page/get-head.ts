@@ -1,4 +1,4 @@
-import type { HeadTag, LayoutConfig } from './types.d.ts'
+import type { HeadTag, LayoutConfig } from "./types.d.ts";
 
 const defaultTags: HeadTag[] = [
   { tag: "meta", props: { charset: "utf-8" } },
@@ -42,4 +42,4 @@ const getHeadTags = (d: Partial<LayoutConfig>) => [
 ];
 
 export const getHead = (config: Partial<LayoutConfig>) =>
-  renderHead(getHeadTags(config))
+  renderHead(getHeadTags(config));

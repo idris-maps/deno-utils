@@ -1,14 +1,14 @@
 import { formHtml, FormsDb, html, LayoutConfig } from "../deps.ts";
 import { page404 } from "./404-page.ts";
 import { pageLayout } from "./page-layout.ts";
-import { formHeader } from './form-header.ts'
+import { formHeader } from "./form-header.ts";
 
 interface Props {
   formsDb: FormsDb;
   rowId: string;
   formName: string;
   formsBaseUrl: string;
-  layoutConfig: Partial<LayoutConfig>
+  layoutConfig: Partial<LayoutConfig>;
 }
 
 export const rowPage = async (
@@ -19,7 +19,7 @@ export const rowPage = async (
 
   if (!def || !row) return page404(layoutConfig);
 
-  const formUrl = `${formsBaseUrl}/${formName}`
+  const formUrl = `${formsBaseUrl}/${formName}`;
   const baseUrl = `${formUrl}/${rowId}`;
   const title = html`
     <a href="${formUrl}">${formName}</a>
@@ -31,14 +31,16 @@ export const rowPage = async (
     layoutConfig,
     title,
     html`
-      ${formHeader({
+      ${
+      formHeader({
         left: html`<h3>${title}</h3>`,
         right: html`
           <a href="${baseUrl}/_delete">
             <button>Delete row</button>
           </a>
-        `
-      })}
+        `,
+      })
+    }
       <main>
         ${
       formHtml({
@@ -48,7 +50,7 @@ export const rowPage = async (
         fields: def.fields.map((field) => ({
           ...field,
           value: row[field.property],
-        }))
+        })),
       })
     }
       </main>

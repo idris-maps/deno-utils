@@ -9,7 +9,7 @@ interface Props {
   pageDb: PageDb;
   formsBaseUrl: string;
   pagesFolder: string;
-  layoutConfig: Partial<LayoutConfig>
+  layoutConfig: Partial<LayoutConfig>;
 }
 
 export const adminPage = async (

@@ -1,4 +1,4 @@
-import { html, LayoutConfig, getHead } from "../deps.ts";
+import { getHead, html, LayoutConfig } from "../deps.ts";
 
 export const pageLayout = (
   layoutConfig: Partial<LayoutConfig> = {},

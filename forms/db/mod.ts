@@ -22,7 +22,7 @@ export const initDb = async (
   dbFilename: string,
   { logger: _log, cacheForms }: { logger?: Logger; cacheForms?: boolean } = {},
 ): Promise<FormsDb> => {
-  const log = logger(_log)
+  const log = logger(_log);
   const forms = await initForms(dbFilename, log, cacheForms);
   const rows = await initRows(dbFilename, forms, log);
 

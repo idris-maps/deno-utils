@@ -1,7 +1,10 @@
 import { html, LayoutConfig } from "../deps.ts";
 import { pageLayout } from "./page-layout.ts";
 
-export const errorPage = (layoutConfig: Partial<LayoutConfig>, error: unknown) =>
+export const errorPage = (
+  layoutConfig: Partial<LayoutConfig>,
+  error: unknown,
+) =>
   pageLayout(
     layoutConfig,
     "Error",

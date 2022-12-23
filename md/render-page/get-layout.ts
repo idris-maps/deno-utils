@@ -1,5 +1,5 @@
-import { LayoutConfig } from './types.d.ts'
-import { getHead } from './get-head.ts'
+import { LayoutConfig } from "./types.d.ts";
+import { getHead } from "./get-head.ts";
 
 export const getLayout = (
   content: string,

@@ -37,10 +37,10 @@ export const startServer = async (
     : "/admin";
   const assetsPrefix = assetsFolder
     ? assetsFolder.startsWith("/") ? assetsFolder : `/${assetsFolder}`
-    : "/assets"
+    : "/assets";
 
-  const layoutConfig = await pageDb.getLayoutConfig(layoutPath)
-  
+  const layoutConfig = await pageDb.getLayoutConfig(layoutPath);
+
   const formHandlers = initFormHandlers(formsDb);
   const adminHandler = initAdminRouter({
     adminPath: adminPrefix,

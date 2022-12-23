@@ -1,24 +1,34 @@
 import { html, is, isRecord, TreeFolder } from "../deps.ts";
 import { PageDb } from "../db/types.d.ts";
 
-const removeLast = <T>(arr: T[]) => arr.filter((_, i) => i !== arr.length - 1)
-const handleIndex = (name: string) => name.endsWith('index') ? removeLast(name.split('/')).join('/') : name
+const removeLast = <T>(arr: T[]) => arr.filter((_, i) => i !== arr.length - 1);
+const handleIndex = (name: string) =>
+  name.endsWith("index") ? removeLast(name.split("/")).join("/") : name;
 const removeExt = (name: string) => name.split(".").slice(0, -1).join(".");
-const getUrl = (pagesFolder: string, path: string[], folderName: string, name: string) => {
-  const _name = handleIndex(removeExt(name))
-  const r =  '/' + (pagesFolder === folderName && path.length === 0
-    ? _name
-    : [...path, folderName, _name].join('/')
-  )
-  return r
-}
+const getUrl = (
+  pagesFolder: string,
+  path: string[],
+  folderName: string,
+  name: string,
+) => {
+  const _name = handleIndex(removeExt(name));
+  const r = "/" +
+    (pagesFolder === folderName && path.length === 0
+      ? _name
+      : [...path, folderName, _name].join("/"));
+  return r;
+};
 
 const isFolder = is<TreeFolder>((d) => isRecord(d) && d.type === "folder");
 const getSubFolders = (d: TreeFolder): TreeFolder[] =>
   d.children.filter(isFolder);
 const getFiles = (d: TreeFolder) => d.children.filter((d) => d.type === "file");
 
-const renderFileList = (pagesFolder: string, path: string[], folder: TreeFolder) =>
+const renderFileList = (
+  pagesFolder: string,
+  path: string[],
+  folder: TreeFolder,
+) =>
   html`
     <ul>
       ${
@@ -33,12 +43,18 @@ const renderFileList = (pagesFolder: string, path: string[], folder: TreeFolder)
     </ul>
   `;
 
-const renderFolder = (pagesFolder: string, path: string[], folder: TreeFolder): string =>
+const renderFolder = (
+  pagesFolder: string,
+  path: string[],
+  folder: TreeFolder,
+): string =>
   html`
     <details style="margin-left:1em">
       <summary>${folder.name}</summary>
       ${
-    getSubFolders(folder).map((d) => renderFolder(pagesFolder, [...path, folder.name], d))
+    getSubFolders(folder).map((d) =>
+      renderFolder(pagesFolder, [...path, folder.name], d)
+    )
   }
       ${renderFileList(pagesFolder, path, folder)}
     </details>

@@ -1,13 +1,13 @@
-import { formHtml, FormsDb, html, LayoutConfig} from "../deps.ts";
+import { formHtml, FormsDb, html, LayoutConfig } from "../deps.ts";
 import { page404 } from "./404-page.ts";
 import { pageLayout } from "./page-layout.ts";
-import { formHeader } from './form-header.ts'
+import { formHeader } from "./form-header.ts";
 
 interface Props {
   formsDb: FormsDb;
   formName: string;
   formsBaseUrl: string;
-  layoutConfig: Partial<LayoutConfig>
+  layoutConfig: Partial<LayoutConfig>;
 }
 
 export const addRowPage = async (
@@ -28,13 +28,15 @@ export const addRowPage = async (
     layoutConfig,
     title,
     html`
-      ${formHeader({left: html`<h3>${title}</h3>` })}
+      ${formHeader({ left: html`<h3>${title}</h3>` })}
       <main>
-        ${formHtml({
-          action: `${baseUrl}/_add`,
-          method: "POST",
-          fields: def.fields,
-        })}
+        ${
+      formHtml({
+        action: `${baseUrl}/_add`,
+        method: "POST",
+        fields: def.fields,
+      })
+    }
       </main>
     `,
   );
