@@ -1,5 +1,5 @@
 import type { AnyIterable } from "./deps.ts";
-import type { LayoutConfig } from "./get-layout.ts";
+import type { LayoutConfig } from "./types.d.ts";
 import type { ReplaceData } from "./replace-data.ts";
 import type { HandleCodeBlock } from "../code-blocks/mod.ts";
 import { map, pipe, toArray } from "./deps.ts";
@@ -11,6 +11,9 @@ import { getLayoutConfig } from "./get-layout-config.ts";
 import { getLayout } from "./get-layout.ts";
 import { parseFrontmatter } from "./parse-frontmatter.ts";
 import { getCodeblocksCss, getCodeblocksScripts } from "./get-lang-assets.ts";
+
+export * from './get-head.ts'
+export * from './types.d.ts'
 
 export const renderPage = (
   md2html: (d: string) => Promise<string>,

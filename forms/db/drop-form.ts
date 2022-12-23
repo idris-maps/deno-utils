@@ -8,7 +8,7 @@ export const dropForm = (
   log: Logger,
   name: string,
 ): Promise<{ dropped: true } | { dropped: false; message: string }> => {
-  return run(dbFilename, async ({ db, exec, query }) => {
+  return run(dbFilename, log, async ({ db, exec, query }) => {
     log({
       level: "info",
       message: `Deleting form "${name}"`,

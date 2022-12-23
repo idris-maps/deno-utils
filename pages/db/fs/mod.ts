@@ -1,5 +1,5 @@
 import { initGetRoute, initGetRouteCached } from "./get-route.ts";
-import { linesFromFile } from "../../deps.ts";
+import { getFileTree, linesFromFile } from "../../deps.ts";
 import type { PageDb } from "../types.d.ts";
 import { readLayoutConfig } from "../get-layout-config.ts";
 
@@ -31,9 +31,14 @@ export const initPageDb = async (
 
   const getLayoutConfig = (path?: string) => readLayoutConfig(path);
 
+  const getPageTree = async (folder?: string) =>
+    folder ? (await getFileTree(folder, ["md"])) : undefined;
+
   return {
     getRoute,
     getPageLines,
     getLayoutConfig,
+    getPageTree,
+    folder,
   };
 };

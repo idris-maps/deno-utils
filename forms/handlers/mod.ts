@@ -1,5 +1,5 @@
 import type { FormsDb } from "../db/mod.ts";
-import { initWrapper } from "./init-wrapper.ts";
+import { initWrapper, ReqProps } from "./init-wrapper.ts";
 import {
   deleteForm,
   getForm,
@@ -9,8 +9,29 @@ import {
   putForm,
 } from "./forms.ts";
 import { deleteRow, getRow, listRows, postRow, putRow } from "./rows.ts";
+import { HandlerResponse } from "./types.ts";
 
-export const initFormHandlers = (db: FormsDb) => {
+type FormHandler = (req: ReqProps) => Promise<HandlerResponse>;
+
+export interface FormHandlers {
+  forms: {
+    delete: FormHandler;
+    get: FormHandler;
+    getSchema: FormHandler;
+    list: FormHandler;
+    put: FormHandler;
+    post: FormHandler;
+  };
+  rows: {
+    delete: FormHandler;
+    get: FormHandler;
+    list: FormHandler;
+    put: FormHandler;
+    post: FormHandler;
+  };
+}
+
+export const initFormHandlers = (db: FormsDb): FormHandlers => {
   const wrap = initWrapper(db);
 
   return {

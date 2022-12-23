@@ -62,7 +62,7 @@ export const listRows = <T extends Record<string, unknown>>(
   form: FormDefinition,
   config: ListRowsConfig = {},
 ): Promise<T[] | undefined> =>
-  run(dbFilename, async ({ db }) => {
+  run(dbFilename, log, async ({ db }) => {
     log({
       level: "info",
       message: `Listing rows of "${form.name}", config: ${

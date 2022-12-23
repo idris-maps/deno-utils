@@ -5,6 +5,7 @@ import { initForms } from "./forms.ts";
 import { initRows } from "./rows.ts";
 import { run } from "./run.ts";
 import { QueryParameter } from "../deps.ts";
+import { logger } from "./log.ts";
 
 export { ERRORS } from "./errors.ts";
 
@@ -19,10 +20,11 @@ export interface FormsDb {
 
 export const initDb = async (
   dbFilename: string,
-  { logger, cacheForms }: { logger?: Logger; cacheForms?: boolean } = {},
+  { logger: _log, cacheForms }: { logger?: Logger; cacheForms?: boolean } = {},
 ): Promise<FormsDb> => {
-  const forms = await initForms(dbFilename, logger, cacheForms);
-  const rows = await initRows(dbFilename, forms, logger);
+  const log = logger(_log)
+  const forms = await initForms(dbFilename, log, cacheForms);
+  const rows = await initRows(dbFilename, forms, log);
 
   return {
     forms,
@@ -31,7 +33,7 @@ export const initDb = async (
       stmt: TemplateStringsArray,
       ...args: QueryParameter[]
     ) =>
-      run(dbFilename, ({ query }) => {
+      run(dbFilename, log, ({ query }) => {
         return query<T>(stmt, ...args);
       }),
   };

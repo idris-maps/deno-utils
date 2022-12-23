@@ -10,7 +10,7 @@ export const getRow = <T extends Record<string, unknown>>(
   form: FormDefinition,
   id: string,
 ): Promise<T | undefined> =>
-  run(dbFilename, async ({ db }) => {
+  run(dbFilename, log, async ({ db }) => {
     log({
       level: "info",
       message: `Getting row ${id} from "${form.name}"`,

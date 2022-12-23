@@ -28,6 +28,7 @@
   --max-width-content: 1080px;
   --line-height: 1.5;
   --form-width: calc(var(--max-width-content) * 0.8);
+  --font-size: 25px;
 
   /** theme colors  (light) */
   --bg-color: var(--white);
@@ -65,7 +66,7 @@ body {
   background-color: var(--bg-color);
   color: var(--color);
   font-family: var(--serif);
-  font-size: 25px;
+  font-size: var(--font-size);
   line-height: var(--line-height);
 }
 
@@ -86,6 +87,40 @@ main {
   max-width: var(--max-width-content);
   padding: 3rem 1rem;
 }
+
+header {
+  margin: 0 auto;
+}
+
+header.form-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 800px) {
+  header.form-header {
+    grid-template-columns: 1fr;
+  }
+}
+
+header.form-header .left,
+header.form-header .right {
+  padding: 1em;
+}
+
+header.form-header .left *,
+header.form-header .right * {
+  margin: 0;
+}
+
+header.form-header .right {
+  text-align: right;
+}
+
+header.form-header .right button {
+  margin-left: 0.5em;
+}
+
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--sans-serif);
@@ -125,16 +160,59 @@ blockquote {
 }
 
 button {
-  padding-top: 0.1em;
+  padding: 0.5em 1em;
   background-color: var(--primary-color);
   color: var(--primary-contrast-color);
+  font-size: calc(var(--font-size) * 0.8);
   border: none;
+}
+
+.svg-btns button {
+  padding: 0.05em 0.1em;
 }
 
 button:hover {
   background-color: var(--secondary-color);
   color: var(--secondary-contrast-color);
   cursor: pointer;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+tr:hover {
+  color: var(--primary-contrast-color);
+  background-color: var(--primary-color);
+}
+
+tr:hover th, th {
+  color: var(--bg-color);
+  background-color: var(--color);
+}
+
+tr:hover a {
+  color: var(--bg-color);
+}
+
+th, td {
+  border: 1px solid var(--color-light);
+  padding: .5rem;
+  text-align: left;
+}
+
+th {
+  text-align: center;
+}
+
+td {
+  font-family: var(--monospace);
+}
+
+tr td:last-child {
+  width: 2em;
+  text-align: center;
 }
 
 /** form **/
@@ -394,4 +472,44 @@ pre[class*="language-"] {
 
 .token.entity {
 	cursor: help;
+}
+
+/** utils */
+span.sep-1-char {
+  display: inline-block;
+  width: 0.5em;
+}
+
+/** admin page */
+
+.admin-file-tree,
+.admin-form-list {
+  background-color: var(--bg-color-light);
+  padding-bottom: 0.5em;
+}
+
+.admin-file-tree ul,
+.admin-form-list {
+  margin: 0;
+  list-style-type: none;
+  padding-left: 0.5em;
+}
+
+.admin-form-list {
+  margin-left: 0;
+  padding-top: 0.5em;
+}
+
+.admin-file-tree details,
+.admin-file-tree li,
+.admin-form-list li {
+  margin-left: 0.5em;
+  padding-top: 0.2em;
+  padding-left: 0.5em;
+}
+
+.admin-file-tree summary,
+.admin-file-tree li,
+.admin-form-list li {
+  border-bottom: var(--bg-color) solid 1px;
 }

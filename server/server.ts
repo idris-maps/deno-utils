@@ -1,4 +1,4 @@
-import { serve, ServeHandler } from "./deps.ts";
+import { serve } from "./deps.ts";
 import parseRequest from "./parse-request.ts";
 import initRes from "./respond.ts";
 import initRouter from "./match-route.ts";
@@ -14,7 +14,7 @@ export const requestHandler = (
   router: Router,
   log?: Logger,
   corsConfig?: CorsConfig,
-): ServeHandler =>
+) =>
 async (request: Request): Promise<Response> => {
   const requestId = crypto.randomUUID();
   try {

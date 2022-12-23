@@ -21,8 +21,11 @@ export const form = async ({ db, formBaseUrl }: Deps, content: string) => {
     throw new Error(`[form codeblock]: form "${data.name}" does not exist`);
   }
 
+  let action = formBaseUrl + "/" + _form.name;
+  if (isString(data.redirect)) action = action + `?redirect=${data.redirect}`;
+
   return formHtml({
-    action: formBaseUrl + "/" + _form.name,
+    action,
     fields: _form.fields,
     hiddenValues,
     method: "POST",
