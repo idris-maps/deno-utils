@@ -1,6 +1,7 @@
 import { formHtml, FormsDb, html, LayoutConfig } from "../deps.ts";
 import { page404 } from "./404-page.ts";
 import { pageLayout } from "./page-layout.ts";
+import { formHeader } from './form-header.ts'
 
 interface Props {
   formsDb: FormsDb;
@@ -18,20 +19,27 @@ export const rowPage = async (
 
   if (!def || !row) return page404(layoutConfig);
 
-  const baseUrl = `${formsBaseUrl}/${formName}/${rowId}`;
-  const title = `${formName} row ${rowId}`;
+  const formUrl = `${formsBaseUrl}/${formName}`
+  const baseUrl = `${formUrl}/${rowId}`;
+  const title = html`
+    <a href="${formUrl}">${formName}</a>
+    <span class="sep-1-char"></span>
+    row ${rowId}
+  `;
 
   return pageLayout(
     layoutConfig,
     title,
     html`
-      <header class="row-page-header">
-        <a href="${baseUrl}/_delete">
-          <button>Delete row</button>
-        </a>
-      </header>
+      ${formHeader({
+        left: html`<h3>${title}</h3>`,
+        right: html`
+          <a href="${baseUrl}/_delete">
+            <button>Delete row</button>
+          </a>
+        `
+      })}
       <main>
-        <h3>${title}</h3>
         ${
       formHtml({
         action: `${baseUrl}/_update`,
@@ -40,7 +48,7 @@ export const rowPage = async (
         fields: def.fields.map((field) => ({
           ...field,
           value: row[field.property],
-        })),
+        }))
       })
     }
       </main>

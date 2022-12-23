@@ -33,8 +33,11 @@ export const startServer = async (
     ? apiPath.startsWith("/") ? apiPath : `/${apiPath}`
     : "/api";
   const adminPrefix = adminPath
-    ? adminPath.startsWith("/") ? adminPath : `${adminPath}`
+    ? adminPath.startsWith("/") ? adminPath : `/${adminPath}`
     : "/admin";
+  const assetsPrefix = assetsFolder
+    ? assetsFolder.startsWith("/") ? assetsFolder : `/${assetsFolder}`
+    : "/assets"
 
   const layoutConfig = await pageDb.getLayoutConfig(layoutPath)
   
@@ -62,7 +65,7 @@ export const startServer = async (
   const handler = (request: Request): Promise<Response> => {
     const { pathname } = new URL(request.url);
 
-    if (pathname.startsWith(`/${assetsFolder || "assets"}`)) {
+    if (pathname.startsWith(assetsPrefix)) {
       return assetsHandler(request);
     }
 

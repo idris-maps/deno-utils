@@ -37,6 +37,7 @@ const getEndpoints = ({ adminPath, formsDb, pageDb, h, layoutConfig }: Props): E
     handler: async (req, res) =>
       res.html(
         await formPage({
+          adminPath,
           formsBaseUrl: `${adminPath}/forms`,
           formsDb,
           formName: req.params.formName,

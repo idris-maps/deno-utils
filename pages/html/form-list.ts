@@ -17,5 +17,5 @@ export const formList = async (baseUrl: string, formsDb: FormsDb) => {
     return html`<p>There are no forms, create one</p>`;
   }
 
-  return html`<ul>${forms.map((d) => renderItem(baseUrl, d))}</ul>`;
+  return html`<ul class="admin-form-list">${forms.map((d) => renderItem(baseUrl, d))}</ul>`;
 };
