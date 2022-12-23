@@ -7,7 +7,7 @@ export const getForm = (
   log: Logger,
   name: string,
 ): Promise<FormDefinition | undefined> => {
-  return run(dbFilename, async ({ query }) => {
+  return run(dbFilename, log, async ({ query }) => {
     log({
       level: "info",
       message: `Getting form "${name}"`,

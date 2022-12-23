@@ -15,4 +15,4 @@ export {
 
 // sqlite
 export { DB } from "https://deno.land/x/sqlite@v3.1.3/mod.ts";
-export type { QueryParameter } from "https://deno.land/x/sqlite@v3.1.3/mod.ts";
+export type { QueryParameter, QueryParameterSet } from "https://deno.land/x/sqlite@v3.1.3/mod.ts";

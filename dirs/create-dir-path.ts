@@ -30,7 +30,5 @@ const createFromParts = (pathParts: string[], rootdir: string) =>
 const getParts = (path: string) =>
   path.split("/").filter((d) => d.trim() !== "");
 
-const createDirPath = (path: string, rootdir?: string) =>
+export const createDirPath = (path: string, rootdir?: string) =>
   createFromParts(getParts(path), rootdir || ".");
-
-export default createDirPath;

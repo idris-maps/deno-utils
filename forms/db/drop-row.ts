@@ -7,7 +7,7 @@ export const dropRow = (
   formName: string,
   id: string,
 ) =>
-  run(dbFilename, async ({ db }) => {
+  run(dbFilename, log, async ({ db }) => {
     log({
       level: "info",
       message: `Deleting row ${id} from "${formName}"`,

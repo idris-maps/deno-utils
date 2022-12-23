@@ -18,7 +18,7 @@ export default ({
   submitLabel,
 }: Props): string =>
   html`
-  <form action=${action} method=${method}>
+  <form action="${action}" method="${method}">
     ${fields.map((field) => FieldComponent({ field, hiddenValues }))}
     <input type="submit" ${submitLabel ? `value="${submitLabel}"` : ""} />
   </form>

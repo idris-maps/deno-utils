@@ -38,7 +38,7 @@ export const createForm = (
     message: `Start creating form table "${form.name}"`,
   });
 
-  return run(dbFilename, async ({ db, exec, query }) => {
+  return run(dbFilename, log, async ({ db, exec, query }) => {
     const exists = await getFormId(query, form.name);
 
     if (exists) {

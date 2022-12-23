@@ -12,7 +12,7 @@ export const updateRow = <T extends Record<string, unknown>>(
 ): Promise<
   { updated: false } | { updated: true; data: T & { __id: string } }
 > =>
-  run(dbFilename, async ({ db }) => {
+  run(dbFilename, log, async ({ db }) => {
     log({
       level: "info",
       message: `Updating row ${id} of "${form.name}"`,
