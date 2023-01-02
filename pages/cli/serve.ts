@@ -1,4 +1,4 @@
-import { startServer } from "./mod.ts";
+import { startServer } from "../server/mod.ts";
 import { initDb as initFormsDb } from "../../forms/db/mod.ts";
 import { initPageDb } from "../../pages/db/fs/mod.ts";
 import { readFormsFolder } from "../../pages/scripts/read-forms-folder.ts";
@@ -9,9 +9,9 @@ interface Config {
   adminPath: string; // default "admin"
   apiPath: string; // default "/api"
   assetsFolder: string; // default "assets"
-  formsFolder: string; // default "forms"
   formsDbName: string; // default "forms.db"
-  layoutConfig?: string;
+  formsFolder: string; // default "forms"
+  layoutConfig: string;
   pagesFolder: string; // default "pages"
   port: number; // default 3333
 }
@@ -22,6 +22,7 @@ const defaultConfig: Config = {
   assetsFolder: "assets",
   formsDbName: "forms.db",
   formsFolder: "forms",
+  layoutConfig: "layout-config.yaml",
   pagesFolder: "pages",
   port: 3333,
 };
@@ -29,7 +30,9 @@ const defaultConfig: Config = {
 const getConfig = () => {
   const args = readArgs();
   const config = defaultConfig;
-  if (isInteger(args.port)) config.port = args.port;
+  if (args.port && isInteger(Number(args.port))) {
+    config.port = Number(args.port);
+  }
   if (isString(args.adminPath)) config.adminPath = args.adminPath;
   if (isString(args.apiPath)) config.apiPath = args.apiPath;
   if (isString(args.assetsFolder)) config.assetsFolder = args.assetsFolder;
@@ -39,19 +42,21 @@ const getConfig = () => {
   return config;
 };
 
-const conf = getConfig();
+export const serve = async () => {
+  const conf = getConfig();
 
-console.log(`
-  Config:
-  =======
-
+  console.log(`
+Config:
+=======
+  
 ${Object.entries(conf).map(([k, v]) => `  ${k}: ${v}`).join("\n")}
+  
+  `);
 
-`);
+  const formsDb = await initFormsDb(conf.formsDbName, { cacheForms: true });
+  const pageDb = await initPageDb({ folder: conf.pagesFolder });
 
-const formsDb = await initFormsDb(conf.formsDbName, { cacheForms: true });
-const pageDb = await initPageDb({ folder: conf.pagesFolder });
+  await readFormsFolder({ formsDb, folder: conf.formsFolder });
 
-await readFormsFolder({ formsDb, folder: conf.formsFolder });
-
-startServer({ ...conf, pageDb, formsDb });
+  startServer({ ...conf, pageDb, formsDb });
+};

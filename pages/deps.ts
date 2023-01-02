@@ -2,7 +2,12 @@ export { serveFile } from "https://deno.land/std@0.167.0/http/file_server.ts";
 export { serve } from "https://deno.land/std@0.167.0/http/server.ts";
 export { parse as parseYaml } from "https://deno.land/std@0.167.0/encoding/yaml.ts";
 
-export { getFileTree, listDirFiles, readDirDeep } from "../dirs/mod.ts";
+export {
+  createDirPath,
+  getFileTree,
+  listDirFiles,
+  readDirDeep,
+} from "../dirs/mod.ts";
 export type { TreeFolder } from "../dirs/mod.ts";
 export { is, isRecord, isString } from "../is/mod.ts";
 export { linesFromFile } from "../iterable/mod.ts";

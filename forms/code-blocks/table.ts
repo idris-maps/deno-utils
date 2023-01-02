@@ -130,7 +130,7 @@ export const table = async ({ db }: Deps, content: string) => {
     { filters, sort, limit, offset },
   );
 
-  if (!rows || !rows.length) {
+  if (!rows) {
     throw new Error("[table codeblock]: query returned no rows");
   }
 

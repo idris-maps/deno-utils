@@ -20,12 +20,15 @@ interface CommonProps {
 
 type RowProps = CommonProps & { data: Record<string, unknown> };
 
+const getCellValue = (value: unknown, isBoolean: boolean) =>
+  isBoolean ? String(Boolean(value)) : value;
+
 const Row = ({ fields, data, edit, baseUrl }: RowProps) =>
   html`
     <tr>
       ${
     fields.map(({ property, type }) =>
-      html`<td>${data[property] || (type === "checkbox" ? "false" : "")}</td>`
+      html`<td>${getCellValue(data[property], type === "checkbox")}</td>`
     )
   }
       ${
