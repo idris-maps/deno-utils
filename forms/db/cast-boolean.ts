@@ -19,7 +19,7 @@ export const castResponse = <T extends Record<string, unknown>>(
   /** @ts-ignore */
   return booleanFieldsInValues.reduce((r, { property }) => ({
     ...r,
-    [property]: r[property] === 1,
+    [property]: String(r[property]) === "1",
   }), values);
 };
 

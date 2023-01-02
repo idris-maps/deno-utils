@@ -12,10 +12,10 @@ const files = await Promise.all((
 console.log(`
 export const assets = ${JSON.stringify(files, null, 2)};
 
-export const createAssetsFolder = async (folder: string) => {
-  await Deno.mkdir(folder);
-  await Promise.all(
-    assets.map(({ file, content }) => Deno.writeTextFile(file, content)),
+export const createAssetFiles = (folder: string) =>
+  Promise.all(
+    assets.map(({ file, content }) =>
+      Deno.writeTextFile(folder + "/" + file, content)
+    ),
   );
-};
 `);
