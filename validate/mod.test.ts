@@ -133,3 +133,21 @@ Deno.test("[validate] is.string", () => {
     got: "1111",
   }]);
 });
+
+Deno.test("[validate] is.oneOf", () => {
+  const str = is.string();
+  const num = is.number();
+  const oneOf = is.oneOf<string, number>([str, num]);
+
+  isEq(oneOf.schema, { oneOf: [str.schema, num.schema] });
+
+  isEq(validate(oneOf)("hello")[0], "hello");
+  isEq(validate(oneOf)(2)[0], 2);
+
+  const [value, errors] = validate(oneOf)([1, "hello"]);
+  isEq(value, undefined);
+  isEq(errors, [{
+    expected: 'oneOf [{"type":"string"},{"type":"number"}]',
+    got: [1, "hello"],
+  }]);
+});

@@ -1,3 +1,5 @@
+// deno-lint-ignore-file no-explicit-any
+
 import { isRecord } from "./deps.ts";
 import {
   getValidationErrors,
@@ -53,12 +55,12 @@ const getSchema = <T>(props: ObjectProps<T>): SchemaObject => ({
   type: "object",
   properties: {
     ...Object.keys(props).reduce((r: Record<string, Schema>, key) => {
-      // @ts-ignore
+      // @ts-ignore ?
       const is = props[key] as Is<any>;
       return { ...r, [key]: fixPropSchema(is.schema) };
     }, {}),
   },
-  // @ts-ignore
+  // @ts-ignore ?
   required: Object.keys(props).filter((key) => !props[key].orUndefined),
 });
 
