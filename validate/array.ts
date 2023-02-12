@@ -4,9 +4,9 @@ import {
   throwValidationError,
   throwValidationErrors,
 } from "./validator.ts";
-import type { Test, ValidationError } from "./validator.ts";
+import type { Is, SchemaArray, ValidationError } from "./type.d.ts";
 
-export const validateArrayOf = <T>(test: Test<T>) =>
+const validate = <T>({ test }: Is<T>) =>
   is<T[]>((d: unknown) => {
     if (!Array.isArray(d)) {
       return throwValidationError({ expected: "array", got: d });
@@ -26,3 +26,13 @@ export const validateArrayOf = <T>(test: Test<T>) =>
       return tests.every(Boolean) || throwValidationErrors(errors);
     }
   });
+
+const getSchema = <T>({ schema }: Is<T>): SchemaArray => ({
+  type: "array",
+  items: schema,
+});
+
+export default <T>(d: Is<T>) => ({
+  schema: getSchema(d),
+  test: validate(d),
+});

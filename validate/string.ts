@@ -1,4 +1,5 @@
 import { isString } from "./deps.ts";
+import { SchemaString } from "./type.d.ts";
 import { throwValidationError, validator } from "./validator.ts";
 
 export interface StringProps {
@@ -10,7 +11,7 @@ export interface StringProps {
 
 const fitsPattern = (pattern: string, d: string) => new RegExp(pattern).test(d);
 
-export const validateString = (props?: StringProps) => {
+const validate = (props?: StringProps) => {
   return (d: unknown): d is string => {
     if (isString(d) && props) {
       if (props.maxLength && d.length > props.maxLength) {
@@ -19,7 +20,7 @@ export const validateString = (props?: StringProps) => {
           got: d,
         });
       }
-      if (props.minLength && d.length > props.minLength) {
+      if (props.minLength && d.length < props.minLength) {
         throwValidationError({
           expected: `minLength ${props.minLength}`,
           got: d,
@@ -30,7 +31,7 @@ export const validateString = (props?: StringProps) => {
       }
       if (props.enum && !props.enum.includes(d)) {
         throwValidationError({
-          expected: `one of ${(props.enum || []).join(",")}`,
+          expected: `one of (${(props.enum || []).join(", ")})`,
           got: d,
         });
       }
@@ -38,3 +39,13 @@ export const validateString = (props?: StringProps) => {
     return validator<string>("string", isString)(d);
   };
 };
+
+const getSchema = (props: StringProps = {}): SchemaString => ({
+  type: "string",
+  ...props,
+});
+
+export default (props?: StringProps) => ({
+  schema: getSchema(props),
+  test: validate(props),
+});
