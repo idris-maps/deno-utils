@@ -148,10 +148,9 @@ const getMapKey = (
 const corsPreflightHandler =
   (corsConfig: CorsConfig, allowedMethods: string[]): Handler => (req, res) => {
     if (cors.isAllowedMethodAndOrigin(req.request, corsConfig)) {
-      return res.status(204, {
-        mutateHeaders: (h) =>
-          cors.addHeaders(h, req.headers.get("origin"), allowedMethods),
-      });
+      const headers = new Headers()
+      cors.addHeaders(headers, req.headers.get("origin"), allowedMethods);
+      return res.status(204, { headers });
     }
 
     return res.status(404);

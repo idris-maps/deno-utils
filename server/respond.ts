@@ -5,29 +5,30 @@ import type { CorsConfig, Logger } from "./types.d.ts";
 type LogResponse = (type: string, d: Record<string, unknown>) => void;
 
 interface ResponseOptions {
-  mutateHeaders?: (headers: Headers) => void;
+  headers?: Headers;
   status?: number;
 }
 
 const getHeaders = (
-  { contentType, redirectUrl, mutateHeaders, addCorsHeaders }: {
+  { contentType, redirectUrl, headers, addCorsHeaders }: {
     contentType?: string;
     redirectUrl?: string;
-    mutateHeaders?: (headers: Headers) => void;
+    headers?: Headers;
     addCorsHeaders?: (headers: Headers) => void;
   },
 ) => {
-  const headers = new Headers({
-    ...(contentType ? { "Content-Type": contentType } : {}),
-    ...(redirectUrl ? { "Location": redirectUrl } : {}),
-  });
-  if (mutateHeaders) {
-    mutateHeaders(headers);
+  const _headers = headers || new Headers();
+  if (contentType) {
+    _headers.set("Content-Type", contentType);
+  }
+  if (redirectUrl) {
+    _headers.set("Location", redirectUrl);
   }
   if (addCorsHeaders) {
-    addCorsHeaders(headers);
+    addCorsHeaders(_headers);
   }
-  return headers;
+  console.log({ addCorsHeaders, _headers })
+  return _headers;
 };
 
 type JSONResponse = (
@@ -40,7 +41,7 @@ const json =
   (log: LogResponse): JSONResponse => (data, options, addCorsHeaders) => {
     const headers = getHeaders({
       contentType: "application/json",
-      mutateHeaders: options?.mutateHeaders,
+      headers: options?.headers,
       addCorsHeaders,
     });
     log("json", { status, headers, data });
@@ -63,7 +64,7 @@ const defaultMessage: { [key: number]: string } = {
 
 interface StatusResponseOptions {
   data?: unknown;
-  mutateHeaders?: (headers: Headers) => void;
+  headers?: Headers;
   message?: string;
 }
 
@@ -81,7 +82,7 @@ const getStatusBody = (code: number, message?: string, data?: unknown) => {
 const status = (log: LogResponse): StatusResponse => (code, options) =>
   json(log)(
     getStatusBody(code, options?.message, options?.data),
-    { status: code, mutateHeaders: options?.mutateHeaders },
+    { status: code, headers: options?.headers },
   );
 
 type HTMLResponse = (
@@ -94,7 +95,7 @@ const html =
   (log: LogResponse): HTMLResponse => (htmlString, options, addCorsHeaders) => {
     const headers = getHeaders({
       contentType: "text/html",
-      mutateHeaders: options?.mutateHeaders,
+      headers: options?.headers,
       addCorsHeaders,
     });
 
@@ -113,10 +114,10 @@ type RedirectResponse = (
 
 const redirect = (log: LogResponse): RedirectResponse => (url, options) => {
   const headers = getHeaders({
-    mutateHeaders: options?.mutateHeaders,
+    headers: options?.headers,
     redirectUrl: url,
   });
-  const status = options?.status || 301;
+  const status = options?.status || 302;
   log("redirect", { status, headers });
 
   return new Response(undefined, { status, headers });
@@ -182,7 +183,9 @@ const init = ({
       : undefined;
 
   const addCorsHeaders = initCorsHeaders(req, corsConfig);
-
+  const wtf = new Headers()
+  addCorsHeaders(wtf)
+  console.log({  addCorsHeaders , corsConfig, wtf })
   return {
     file: file(req, log),
     html: (htmlString: string, options?: ResponseOptions) =>

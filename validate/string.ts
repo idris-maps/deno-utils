@@ -11,8 +11,8 @@ export interface StringProps {
 
 const fitsPattern = (pattern: string, d: string) => new RegExp(pattern).test(d);
 
-const validate = (props?: StringProps) => {
-  return (d: unknown): d is string => {
+const validate = <T extends string>(props?: StringProps) => {
+  return (d: unknown): d is T => {
     if (isString(d) && props) {
       if (props.maxLength && d.length > props.maxLength) {
         throwValidationError({
@@ -45,7 +45,7 @@ const getSchema = (props: StringProps = {}): SchemaString => ({
   ...props,
 });
 
-export default (props?: StringProps) => ({
+export default <T extends string>(props?: StringProps) => ({
   schema: getSchema(props),
-  test: validate(props),
+  test: validate<T>(props),
 });

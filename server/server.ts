@@ -63,7 +63,5 @@ export const server = (
 ) => {
   const router = initRouter(routes, cors);
   const handleRequest = requestHandler(router, log, cors);
-
-  console.log(`Started on port ${port}`);
   serve(handleRequest, { port });
 };

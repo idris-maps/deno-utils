@@ -6,6 +6,7 @@ import isString, { StringProps } from "./string.ts";
 import isOneOf from "./one-of.ts";
 import type { Is } from "./type.d.ts";
 export { validate } from "./validator.ts";
+export * from './type.d.ts'
 
 const orUndefined = <T>(_is_: Is<T>): Is<T | undefined> => {
   return {
@@ -23,9 +24,9 @@ export const is = {
   booleanOrUndefined: (props?: BooleanProps) => orUndefined(isBoolean(props)),
   number: isNumber,
   numberOrUndefined: (props?: NumberProps) => orUndefined(isNumber(props)),
-  oneOf: <A, B>(props: Is<A | B>[]) => isOneOf(props),
+  oneOf:  <T extends Is<unknown>>(props: T[]) => isOneOf(props),
   object: isObj,
   objectOrUndefined: <T>(props: ObjectProps<T>) => orUndefined(isObj<T>(props)),
-  string: isString,
+  string: <T extends string>(props?: StringProps) => isString<T>(props),
   stringOrUndefined: (props?: StringProps) => orUndefined(isString(props)),
 };

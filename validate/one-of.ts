@@ -1,8 +1,8 @@
 import type { Is } from "./type.d.ts";
 import { throwValidationError } from "./validator.ts";
 
-const validate = <A, B>(props: Is<A | B>[]) => {
-  return (d: unknown): d is A | B => {
+const validate = <T extends Is<unknown>>(props: T[]) => {
+  return (d: unknown): d is T => {
     const isOneOf = props.some((is) => {
       try {
         const pass = is.test(d);
@@ -22,7 +22,7 @@ const validate = <A, B>(props: Is<A | B>[]) => {
   };
 };
 
-export default <A, B>(props: Is<A | B>[]) => ({
+export default <T extends Is<any>>(props: T[]) => ({
   test: validate(props),
   schema: { oneOf: props.map((d) => d.schema) },
 });
