@@ -1,9 +1,10 @@
 const files = (version: string) => ({
-  "import_map.json": `
+  "deno.json": `
 {
   "imports": {
     "$/": "./"
-  }
+  },
+  "lock": false
 }
   `,
 
@@ -18,7 +19,7 @@ export type { Endpoint, Handler } from "https://deno.land/x/anders@v${version}/s
 
   // ---------------
 
-  "mod.ts": `
+  "serve.ts": `
 import { readArg, server } from "./deps.ts";
 import routes from "./routes.ts";
 
@@ -27,14 +28,6 @@ const port = Number.isNaN(Number(readArg("port")))
   : Number(readArg("port"));
   
 server({ routes, port });
-  `,
-
-  // ---------------
-
-  "start.sh": `
-#!/bin/bash
-
-deno run --allow-net --importmap=import_map.json mod.ts    
   `,
 });
 

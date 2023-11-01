@@ -2,8 +2,7 @@ const initCurrent = `
   server was initialized in the current directory
 
   RUN:
-  chmod u+x start.sh
-  ./start.sh
+  deno run --allow-net serve.ts
 `;
 
 const initInDir = (dir: string) => `
@@ -11,8 +10,7 @@ const initInDir = (dir: string) => `
 
   RUN:
   cd ${dir}
-  chmod u+x start.sh
-  ./start.sh
+  deno run --allow-net serve.ts
 `;
 
 export const init = (dir?: string) => dir ? initInDir(dir) : initCurrent;
@@ -40,7 +38,7 @@ export const generatedRoutesFile = `
 
 export const help = (version: string) => `
   ------------------------------
-   server-cli version: ${version}
+    server-cli version: ${version}
   ------------------------------
 
   COMMANDS:

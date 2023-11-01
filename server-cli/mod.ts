@@ -7,7 +7,7 @@ import { readArg } from "./deps.ts";
 const isString = (d: string | boolean | undefined): d is string =>
   String(d) === d;
 
-const UTILS_VERSION = "1.0.2";
+const UTILS_VERSION = "1.0.6";
 
 const [op, ...args] = Deno.args;
 
