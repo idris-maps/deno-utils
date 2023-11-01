@@ -1,18 +1,17 @@
+import { isBoolean } from "./deps.ts";
+import { SchemaBoolean } from "./type.d.ts";
 import { throwValidationError, validator } from "./validator.ts";
 
 export interface BooleanProps {
   enum?: boolean[];
 }
 
-const isBoolean = (d: unknown): d is boolean =>
-  typeof d === "boolean" && ["true", "false"].includes(String(d));
-
-export const validateBoolean = (props?: BooleanProps) => {
+const validate = (props?: BooleanProps) => {
   return (d: unknown): d is boolean => {
     if (isBoolean(d) && props) {
       if (props.enum && !props.enum.includes(d)) {
         throwValidationError({
-          expected: `one of ${(props.enum || []).join(",")}`,
+          expected: `one of (${(props.enum || []).join(",")})`,
           got: d,
         });
       }
@@ -20,3 +19,13 @@ export const validateBoolean = (props?: BooleanProps) => {
     return validator<boolean>("boolean", isBoolean)(d);
   };
 };
+
+const getSchema = (props: BooleanProps = {}): SchemaBoolean => ({
+  type: "boolean",
+  ...props,
+});
+
+export default (props?: BooleanProps) => ({
+  schema: getSchema(props),
+  test: validate(props),
+});

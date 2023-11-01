@@ -1,12 +1,4 @@
-export type Test<T> = (d: unknown) => d is T;
-
-export interface ValidationError {
-  expected: string;
-  got: unknown;
-  path?: string;
-}
-
-export type Validation<T> = [data: T] | [undefined, ValidationError[]];
+import { Is, Test, Validation, ValidationError } from "./type.d.ts";
 
 export const ERROR = "[validation-error]";
 
@@ -36,9 +28,9 @@ export const getValidationErrors = (err: Error): ValidationError[] => {
   throw err;
 };
 
-export const validate = <T>(test: Test<T>) => (d: unknown): Validation<T> => {
+export const validate = <T>(is: Is<T>) => (d: unknown): Validation<T> => {
   try {
-    if (test(d)) {
+    if (is.test(d)) {
       return [d];
     }
   } catch (err) {
@@ -46,11 +38,3 @@ export const validate = <T>(test: Test<T>) => (d: unknown): Validation<T> => {
   }
   return [undefined, []];
 };
-
-export const orUndefined =
-  <T>(test: Test<T>) => (d: unknown): d is T | undefined => {
-    if (typeof d === "undefined") {
-      return true;
-    }
-    return test(d);
-  };

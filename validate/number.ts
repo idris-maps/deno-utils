@@ -1,4 +1,5 @@
 import { isNumber } from "./deps.ts";
+import { SchemaNumber } from "./type.d.ts";
 import { throwValidationError, validator } from "./validator.ts";
 
 export interface NumberProps {
@@ -19,36 +20,36 @@ const isMultipleOf = (multiple: number, d: number) => {
   return (d * multiplier) % (multiple * multiplier) === 0;
 };
 
-export const validateNumber = (props?: NumberProps) => {
+const validate = (props?: NumberProps) => {
   return (d: unknown): d is number => {
     if (isNumber(d) && props) {
-      if (props.maximum && d >= props.maximum) {
+      if (props.maximum && d > props.maximum) {
         throwValidationError({ expected: `maximum ${props.maximum}`, got: d });
       }
-      if (props.exclusiveMaximum && d > props.exclusiveMaximum) {
+      if (props.exclusiveMaximum && d >= props.exclusiveMaximum) {
         throwValidationError({
-          expected: `exclusiveMaximum ${props.exclusiveMaximum}`,
+          expected: `exclusive maximum ${props.exclusiveMaximum}`,
           got: d,
         });
       }
-      if (props.minimum && d <= props.minimum) {
+      if (props.minimum && d < props.minimum) {
         throwValidationError({ expected: `minimum ${props.minimum}`, got: d });
       }
-      if (props.exclusiveMinimum && d < props.exclusiveMinimum) {
+      if (props.exclusiveMinimum && d <= props.exclusiveMinimum) {
         throwValidationError({
-          expected: `exclusiveMinimum ${props.exclusiveMinimum}`,
+          expected: `exclusive minimum ${props.exclusiveMinimum}`,
           got: d,
         });
       }
       if (props.multipleOf && !isMultipleOf(props.multipleOf, d)) {
         throwValidationError({
-          expected: `multipleOf ${props.multipleOf}`,
+          expected: `multiple of ${props.multipleOf}`,
           got: d,
         });
       }
       if (props.enum && !props.enum.includes(d)) {
         throwValidationError({
-          expected: `one of ${(props.enum || []).join(",")}`,
+          expected: `one of (${(props.enum || []).join(", ")})`,
           got: d,
         });
       }
@@ -56,3 +57,13 @@ export const validateNumber = (props?: NumberProps) => {
     return validator<number>("number", isNumber)(d);
   };
 };
+
+const getSchema = (props: NumberProps = {}): SchemaNumber => ({
+  type: "number",
+  ...props,
+});
+
+export default (props?: NumberProps) => ({
+  schema: getSchema(props),
+  test: validate(props),
+});
