@@ -35,9 +35,11 @@ const SelectOptions = ({
   value,
 }: { options: string[] | SelectOption[]; value?: string }) => {
   const getAttributes = (d: string | SelectOption, i: number) => {
-    const v = isEnumString(d) ? d : d.value
-    return isSelected(v, i, value) ? { value: v, selected: true } : { value: v }
-  }
+    const v = isEnumString(d) ? d : d.value;
+    return isSelected(v, i, value)
+      ? { value: v, selected: true }
+      : { value: v };
+  };
 
   return options.map((d, i) =>
     html`

@@ -1,4 +1,4 @@
-import type { HeadTag, LayoutConfig } from "./get-layout.ts";
+import type { HeadTag, LayoutConfig } from "./types.d.ts";
 import { is, isArrayOf, isArrayOfStrings, isRecord, isString } from "./deps.ts";
 
 const isHeadTagProps = is<Record<string, string>>((d) =>
