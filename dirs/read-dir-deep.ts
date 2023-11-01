@@ -8,7 +8,7 @@ const readDir = async (path: string) => {
     if (file.isFile) files.push(path + "/" + file.name);
   }
 
-  const childDirs = (await Promise.all(dirs.map(readDir)));
+  const childDirs = await Promise.all(dirs.map(readDir));
   const childFiles = childDirs
     .map((d) => d.files)
     .reduce((r, d) => {
