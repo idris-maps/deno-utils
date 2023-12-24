@@ -9,11 +9,12 @@ const comment = [
 
 const importEndpointType = `import type { Endpoint } from "$/deps.ts";`;
 
-const importRoutes = (routes: RouteToCreate[]) => [
-  'const route = {',
-  ...routes.map(d => `  "${d.file.name}": await import("${d.file.path}"),`),
-  '};'
-].join('\n')
+const importRoutes = (routes: RouteToCreate[]) =>
+  [
+    "const route = {",
+    ...routes.map((d) => `  "${d.file.name}": await import("${d.file.path}"),`),
+    "};",
+  ].join("\n");
 
 const routesStart = `const routes: Endpoint[] = [`;
 const routesEnd = `];`;
