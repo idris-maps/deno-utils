@@ -27,18 +27,21 @@ const getBody = async (request: Request): Promise<ReqBody> => {
     }
   }
 
-  if (type === "application/x-www-form-urlencoded") {
+  if (
+    type === "application/x-www-form-urlencoded" ||
+    type?.startsWith("multipart/form-data")
+  ) {
     const form = await request.formData();
     const data: { [key: string]: string } = {};
     const files: File[] = [];
-
-    form.forEach((value, key) => {
-      if (isFile(value)) {
+    for (const key of form.keys()) {
+      const value = form.get(key);
+      if (value && isFile(value)) {
         files.push(value);
-      } else {
+      } else if (value) {
         data[key] = value;
       }
-    });
+    }
     return { data, files };
   }
   return { data: {}, files: [] };
