@@ -4,16 +4,18 @@ import type { CorsConfig, Logger } from "./types.d.ts";
 
 type LogResponse = (type: string, d: Record<string, unknown>) => void;
 
+type MutateHeaders = ((headers: Headers) => void) | ((headers: Headers) => Promise<void>)
+
 interface ResponseOptions {
-  mutateHeaders?: (headers: Headers) => void;
+  mutateHeaders?: MutateHeaders;
   status?: number;
 }
 
-const getHeaders = (
+const getHeaders = async (
   { contentType, redirectUrl, mutateHeaders, addCorsHeaders }: {
     contentType?: string;
     redirectUrl?: string;
-    mutateHeaders?: (headers: Headers) => void;
+    mutateHeaders?: MutateHeaders;
     addCorsHeaders?: (headers: Headers) => void;
   },
 ) => {
@@ -22,7 +24,7 @@ const getHeaders = (
     ...(redirectUrl ? { "Location": redirectUrl } : {}),
   });
   if (mutateHeaders) {
-    mutateHeaders(headers);
+    await mutateHeaders(headers);
   }
   if (addCorsHeaders) {
     addCorsHeaders(headers);
@@ -34,11 +36,11 @@ type JSONResponse = (
   data?: unknown,
   options?: ResponseOptions,
   addCorsHeaders?: (headers: Headers) => void,
-) => Response;
+) => Promise<Response>;
 
 const json =
-  (log: LogResponse): JSONResponse => (data, options, addCorsHeaders) => {
-    const headers = getHeaders({
+  (log: LogResponse): JSONResponse => async (data, options, addCorsHeaders) => {
+    const headers = await getHeaders({
       contentType: "application/json",
       mutateHeaders: options?.mutateHeaders,
       addCorsHeaders,
@@ -70,7 +72,7 @@ interface StatusResponseOptions {
 type StatusResponse = (
   code: number,
   options?: StatusResponseOptions,
-) => Response;
+) => Promise<Response>;
 
 const getStatusBody = (code: number, message?: string, data?: unknown) => {
   if (code === 204) return undefined;
@@ -88,11 +90,11 @@ type HTMLResponse = (
   htmlString: string,
   options?: ResponseOptions,
   addCorsHeaders?: (headers: Headers) => void,
-) => Response;
+) => Promise<Response>;
 
 const html =
-  (log: LogResponse): HTMLResponse => (htmlString, options, addCorsHeaders) => {
-    const headers = getHeaders({
+  (log: LogResponse): HTMLResponse => async (htmlString, options, addCorsHeaders) => {
+    const headers = await getHeaders({
       contentType: "text/html",
       mutateHeaders: options?.mutateHeaders,
       addCorsHeaders,
@@ -109,10 +111,10 @@ const html =
 type RedirectResponse = (
   url: string,
   options?: ResponseOptions,
-) => Response;
+) => Promise<Response>;
 
-const redirect = (log: LogResponse): RedirectResponse => (url, options) => {
-  const headers = getHeaders({
+const redirect = (log: LogResponse): RedirectResponse => async (url, options) => {
+  const headers = await getHeaders({
     mutateHeaders: options?.mutateHeaders,
     redirectUrl: url,
   });

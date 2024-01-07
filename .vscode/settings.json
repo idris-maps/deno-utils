@@ -1,4 +1,6 @@
 {
   "deno.enable": true,
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "deno.unstable": true,
+  "deno.lint": true,
 }

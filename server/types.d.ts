@@ -1,5 +1,7 @@
 import type { Res } from "./respond.ts";
 
+export type { Res }
+
 export type Method = Request["method"];
 
 export interface Endpoint {
