@@ -34,8 +34,7 @@ const getBody = async (request: Request): Promise<ReqBody> => {
     const form = await request.formData();
     const data: { [key: string]: string } = {};
     const files: File[] = [];
-    for (const key of form.keys()) {
-      const value = form.get(key);
+    for (const [key, value] of form.entries()) {
       if (value && isFile(value)) {
         files.push(value);
       } else if (value) {
