@@ -62,7 +62,6 @@ const fixRow = (d: string) => {
 let num = 0;
 
 for await (const part of toPart(lines)) {
-  console.log(part);
   num = num + 1;
   console.log(num);
   console.log(toSrtTimestamp(part));
