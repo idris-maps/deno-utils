@@ -4,7 +4,9 @@ import type { CorsConfig, Logger } from "./types.d.ts";
 
 type LogResponse = (type: string, d: Record<string, unknown>) => void;
 
-type MutateHeaders = ((headers: Headers) => void) | ((headers: Headers) => Promise<void>)
+type MutateHeaders =
+  | ((headers: Headers) => void)
+  | ((headers: Headers) => Promise<void>);
 
 interface ResponseOptions {
   mutateHeaders?: MutateHeaders;
@@ -93,7 +95,8 @@ type HTMLResponse = (
 ) => Promise<Response>;
 
 const html =
-  (log: LogResponse): HTMLResponse => async (htmlString, options, addCorsHeaders) => {
+  (log: LogResponse): HTMLResponse =>
+  async (htmlString, options, addCorsHeaders) => {
     const headers = await getHeaders({
       contentType: "text/html",
       mutateHeaders: options?.mutateHeaders,
@@ -113,16 +116,17 @@ type RedirectResponse = (
   options?: ResponseOptions,
 ) => Promise<Response>;
 
-const redirect = (log: LogResponse): RedirectResponse => async (url, options) => {
-  const headers = await getHeaders({
-    mutateHeaders: options?.mutateHeaders,
-    redirectUrl: url,
-  });
-  const status = options?.status || 301;
-  log("redirect", { status, headers });
+const redirect =
+  (log: LogResponse): RedirectResponse => async (url, options) => {
+    const headers = await getHeaders({
+      mutateHeaders: options?.mutateHeaders,
+      redirectUrl: url,
+    });
+    const status = options?.status || 301;
+    log("redirect", { status, headers });
 
-  return new Response(undefined, { status, headers });
-};
+    return new Response(undefined, { status, headers });
+  };
 
 type FileResponse = (filePath: string) => Promise<Response>;
 
